@@ -98,7 +98,8 @@ public:
 
 
 double step_function(Configuration &C, int t){
-    return (t > C.quarentine_step_time) * C.p_active;
+    if (t <= C.quarentine_step_time) return 1.;
+    else return C.p_active;
 }
 
 
@@ -112,6 +113,7 @@ public:
 
     Simulation(Configuration C){
         Config = C;
+        ofstream outfile("data.txt",  ios::out);
     }
 
     void initial_state(double s, double sh, double e, double i, double r, double pd, double d){
@@ -187,18 +189,16 @@ public:
 
         double S = this->secure_home + this->susceptible;
 
-        this->secure_home = S * this->P_secure_in_home;
-        this->susceptible = S * (1 - this->P_secure_in_home) * (1 - this->P_infection);
+        secure_home = S * this->P_secure_in_home;
+        susceptible = S * (1 - this->P_secure_in_home) * (1 - this->P_infection);
 
-        this->dead = this->pending_death * this->Config.xi;
-        this->recovered = this->Config.IFR * (1 - this->Config.mu) * this->infected;
-        this->pending_death = this->Config.IFR * this->Config.mu * this->infected + this->pending_death * (1 - this->Config.xi);
+        dead = this->pending_death * this->Config.xi;
+        recovered = this->Config.IFR * (1 - this->Config.mu) * this->infected;
+        pending_death = this->Config.IFR * this->Config.mu * this->infected + this->pending_death * (1 - this->Config.xi);
 
-        this->infected = this->exposed * this->Config.eta + this->infected * (1 - this->Config.IFR);
+        infected = this->exposed * this->Config.eta + this->infected * (1 - this->Config.IFR);
 
-        this->exposed = S * (1 - this->P_secure_in_home) * this->P_infection + this->exposed * (
-            1 - this->Config.eta
-        );
+        exposed = S * (1 - this->P_secure_in_home) * this->P_infection + this->exposed * (1 - this->Config.eta);
     }
 
     int save_state(){
@@ -230,24 +230,24 @@ private:
     double P_infection;
 
     double _P_home_is_secure(){
-        return pow((1 - this->infected), this->Config.sigma - 1);
+        return pow((1 - infected), Config.sigma - 1);
     }
 
     double _P_secure_in_home(){
-        return (1 - this->Config.p_active) * this->_P_home_is_secure() * (1 - this->Config.permeability);
+        return (1 - P_active) * _P_home_is_secure() * (1 - Config.permeability);
     }
 
     double _P_infection(){
-        this->P_not_successful_infection = 1 - this->Config.landa * this->infected;
+        P_not_successful_infection = 1 - Config.landa * infected;
 
-        this->P_active_infections = this->Config.p_active * (
-            1 - pow(this->P_not_successful_infection, this->Config.k_active)
+        P_active_infections = P_active * (
+            1 - pow(P_not_successful_infection, Config.k_active)
         );
-        this->P_conf_infections = (1 - this->Config.p_active) * (
-            1 - pow(this->P_not_successful_infection, this->Config.k_conf)
+        P_conf_infections = (1 - P_active) * (
+            1 - pow(P_not_successful_infection, Config.k_conf)
         );
 
-        return this->P_active_infections + this->P_conf_infections;
+        return P_active_infections + P_conf_infections;
     }
 
 };
@@ -261,12 +261,9 @@ int main()
 
     Simul.initial_state();
 
-    cout << "bucle" <<endl;
     for(int i=0; i < Config.simulation_time; i++){
         Simul.evolve();
         Simul.save_state();
     }
-    cout << "press" <<endl;
-    getchar();
     return 1;
 }

@@ -17,13 +17,14 @@ with open("data.txt", 'r') as file:
 
 fig, ax = plt.subplots()
 
-ax.plot(time, sh)
-ax.plot(time, s)
-ax.plot(time, i)
-ax.plot(time, e)
-ax.plot(time, pd)
-ax.plot(time, d)
-ax.plot(time, r)
+ax.plot(time, sh, label='sh')
+ax.plot(time, s, label='s')
+ax.plot(time, i, label='i')
+ax.plot(time, e, label='e')
+ax.plot(time, pd, label='pd')
+ax.plot(time, d, label='d')
+ax.plot(time, r, label='r')
+ax.legend()
 plt.show()
 
 exit()
