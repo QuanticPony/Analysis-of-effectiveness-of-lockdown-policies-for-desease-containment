@@ -1,9 +1,0 @@
-self.permeability = 0.01   # Permeabilidad de la cuarentena
-self.sigma = 2.3            # Tamaño hogar
-self.k_active = 3.2         # Nº contactos activo
-self.k_conf = 1.5           # Nº contactos confinado
-self.eta = 0.333            # Prob pasar de E a I
-self.landa = 0.1            # Prob de infección exitosa en un contacto
-self.IFR = 0.05             # Prob de dejar de ser infeccioso
-self.mu = 0.4               # Prob de esperar muerte
-self.what = 0.2             # Prob de morirse esperando la muerte

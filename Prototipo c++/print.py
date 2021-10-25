@@ -3,6 +3,8 @@ from math import sin
 from phaseportrait import PhasePortrait2D
 import numpy as np
 
+
+
 # with open("random.txt", 'r') as file:
 #     rand, = zip(*(map(float, line.split('\t')) for line in file))
     
@@ -12,7 +14,7 @@ import numpy as np
 
 
 with open("data.txt", 'r') as file:
-    time, sh, s, e, i, pd, d, r = zip(*(map(float, line.split('\t')) for line in file))
+    time, sh, s, e, i, pd, d, r, r0 = zip(*(map(float, line.split('\t')) for line in file))
  
 
 fig, ax = plt.subplots()
@@ -25,6 +27,9 @@ ax.plot(time, pd, label='pd')
 ax.plot(time, d, label='d')
 ax.plot(time, r, label='r')
 ax.legend()
+
+fig2, ax2 = plt.subplots()
+ax2.plot(time, r0, label='R0')
 plt.show()
 
 exit()

@@ -109,6 +109,7 @@ public:
     Configuration Config;
     double susceptible, secure_home, exposed, infected, recovered, pending_death, dead;
     int t=0;
+    double R0;
 
 
     Simulation(Configuration C){
@@ -193,10 +194,10 @@ public:
         susceptible = S * (1 - this->P_secure_in_home) * (1 - this->P_infection);
 
         dead = this->pending_death * this->Config.xi;
-        recovered = this->Config.IFR * (1 - this->Config.mu) * this->infected;
-        pending_death = this->Config.IFR * this->Config.mu * this->infected + this->pending_death * (1 - this->Config.xi);
+        recovered = this->Config.mu * (1 - this->Config.IFR) * this->infected;
+        pending_death = this->Config.mu * this->Config.IFR * this->infected + this->pending_death * (1 - this->Config.xi);
 
-        infected = this->exposed * this->Config.eta + this->infected * (1 - this->Config.IFR);
+        infected = this->exposed * this->Config.eta + this->infected * (1 - this->Config.mu);
 
         exposed = S * (1 - this->P_secure_in_home) * this->P_infection + this->exposed * (1 - this->Config.eta);
     }
@@ -208,8 +209,10 @@ public:
             cout << "Error al crear el fichero de guardado datos" << endl;
             return 0;
         }
+
+        this->R0 = this->_R0();
         
-        outfile << this->t << "\t" << this->secure_home << "\t" << this->susceptible << "\t" << this->exposed << "\t" << this->infected << "\t" << this->pending_death << "\t" << this->dead << "\t" << this->recovered <<endl;
+        outfile << this->t << "\t" << this->secure_home << "\t" << this->susceptible << "\t" << this->exposed << "\t" << this->infected << "\t" << this->pending_death << "\t" << this->dead << "\t" << this->recovered << "\t" << this->R0 <<endl;
            
         outfile.close();
 
@@ -228,6 +231,10 @@ private:
     double P_active_infections;
     double P_conf_infections;
     double P_infection;
+
+    double _R0(){
+        return (1 - this->P_secure_in_home) * this->P_infection / Config.IFR / infected;
+    }
 
     double _P_home_is_secure(){
         return pow((1 - infected), Config.sigma - 1);
