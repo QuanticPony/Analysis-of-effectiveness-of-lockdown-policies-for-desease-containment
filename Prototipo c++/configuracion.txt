@@ -1,5 +1,5 @@
 permeability=0.0
-sigma=2.3
+sigma=1.4668692707363256
 k_active=8.6
 k_conf=3.2
 eta=0.384615385
