@@ -2,3 +2,5 @@
 *.cmd
 .vscode/
 build/
+real_data/*
+*/__pycache__/*

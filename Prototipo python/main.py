@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from phaseportrait.sliders import sliders
+# from phaseportrait.sliders import sliders
 
 
 class Simulation:
@@ -106,12 +106,12 @@ class Simulation:
             )
             self.t += 1
     
-    def add_slider(self, param_name, *, valinit=None, valstep=0.1, valinterval=10):
-        self.sliders.update({param_name: sliders.Slider(self, param_name, valinit=valinit, valstep=valstep, valinterval=valinterval)})
+    # def add_slider(self, param_name, *, valinit=None, valstep=0.1, valinterval=10):
+    #     self.sliders.update({param_name: sliders.Slider(self, param_name, valinit=valinit, valstep=valstep, valinterval=valinterval)})
 
-        self.fig.subplots_adjust(bottom=0.25)
+    #     self.fig.subplots_adjust(bottom=0.25)
 
-        self.sliders[param_name].slider.on_changed(self.sliders[param_name])
+    #     self.sliders[param_name].slider.on_changed(self.sliders[param_name])
         
         
     def plot(self, scale=None):
@@ -161,9 +161,9 @@ if __name__ == "__main__":
         (N-I)/N, 0, I/N, 0, 0, 0, 0, 200, P_active_function=funcion_escalon
     )
     
-    simulation.add_slider('permeability', valinit=0, valinterval=[0,1], valstep=0.05)
-    simulation.add_slider('p_active', valinit=0.2, valinterval=[0,1], valstep=0.05)
-    simulation.add_slider('step_time', valinit=50, valinterval=[0,200], valstep=1)
+    # simulation.add_slider('permeability', valinit=0, valinterval=[0,1], valstep=0.05)
+    # simulation.add_slider('p_active', valinit=0.2, valinterval=[0,1], valstep=0.05)
+    # simulation.add_slider('step_time', valinit=50, valinterval=[0,200], valstep=1)
     
     fig, ax = simulation.plot(N)
     

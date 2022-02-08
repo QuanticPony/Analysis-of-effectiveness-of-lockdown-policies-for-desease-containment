@@ -3,29 +3,38 @@ import cupy.random as cprand
 
 import pandas
 
-N_SIMULATIONS = 10
+N_SIMULATIONS = 5000
+
+###########################
+## PRIORS
+###########################
 
 def set_permability(params, *, size=N_SIMULATIONS):
     #'permability'
-    params[0]  = cprand.random(size, dtype=cp.float64)
+    params[0]  = cprand.random(size, dtype=cp.float64)*0.1
 
 def set_lambda(params, *, size=N_SIMULATIONS):
     #'lambda'
-    params[1] = cprand.random(size, dtype=cp.float64)*0.4
+    params[1] = cprand.random(size, dtype=cp.float64)*0.1
 
 def set_IFR(params, *, size=N_SIMULATIONS):
     #'IFR'
-    params[2] = cprand.random(size, dtype=cp.float64)*0.1
+    params[2] = cprand.random(size, dtype=cp.float64)*0.4
 
 def set_what(params, *, size=N_SIMULATIONS):
     #'what'
-    params[3] = cprand.random(size, dtype=cp.float64)*0.3
+    params[3] = cprand.random(size, dtype=cp.float64)*0.4
+
+def set_initial_i(params, *, size=N_SIMULATIONS):
+    #'initial_i'
+    params[4] = cprand.random(size, dtype=cp.float64)*5/34e6
     
 def set_params(params, *, size=N_SIMULATIONS):
-    set_permability(params, size=N_SIMULATIONS)
-    set_lambda(params, size=N_SIMULATIONS)
-    set_IFR(params, size=N_SIMULATIONS)
-    set_what(params, size=N_SIMULATIONS)
+    set_permability(params, size=size)
+    set_lambda(params, size=size)
+    set_IFR(params, size=size)
+    set_what(params, size=size)
+    set_initial_i(params, size=size)
     
 #######################################################################################  
     
