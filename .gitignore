@@ -4,3 +4,6 @@
 build/
 real_data/*
 */__pycache__/*
+*.real_data
+*.png
+*.dat

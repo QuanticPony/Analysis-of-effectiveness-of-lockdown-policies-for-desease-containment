@@ -1,144 +1,71 @@
-from math import ceil
-import cupy as cp
-import datetime
+from cProfile import label
 import matplotlib.pyplot as plt
-import numpy as np
 
-from set_parameters import *
-from evolution import *
+from simulation_functions import *
 
-COUNTRY = 'Spain'
-MAX_DAYS = 140
-param_to_index = {
-    'permability' : 0,
-    'lambda' : 1,
-    'IFR' : 2,
-    'what' : 3,
-    'initial_i' : 4,
-}
-
-fixed_params_to_index = {
-    'home_size' : 0,
-    'k_average_active' : 1,
-    'k_average_confined' : 2,
-    'eta' : 3,
-    'mu' : 4
-}
-
-epi_poblation_to_index = {
-    'sh' : 0,
-    's' : 1,
-    'e' : 2,
-    'i' : 3,
-    'pd' : 4,
-    'd' : 5,
-    'r' : 6,
-}
-
-
-
-fixed_params = cp.zeros(5, dtype=cp.float64)
-set_fixed_params(fixed_params, COUNTRY)
-
-state = cp.zeros((7,N_SIMULATIONS), dtype=cp.float64)
-params = cp.zeros((5,N_SIMULATIONS), dtype=cp.float64)
-log_diff = cp.zeros((N_SIMULATIONS), dtype=cp.float64)
-
-set_params(params)
-state[1] = 1-params[4]
-state[3] = params[4]
-
-def str_to_date(string, *, strange=False):
-    _d = string.split('/')
-    if strange:
-        return datetime.date(int(_d[2]), int(_d[0]), int(_d[1]))
-    return datetime.date(int(_d[0]), int(_d[1]), int(_d[2]))
-
-def date_to_str(date):
-    return date.strftime('%Y-%m-%d')
-
-simulation_time = 0
-
-# Conseguir el array de las muertes diarias. Indice indica la cantidad de días desde first_day_deaths_list
-deaths_complete_db = pandas.read_csv(r'real_data\Deaths_worldwide_1Aug.csv')
-deaths_partial_db = deaths_complete_db[deaths_complete_db['Country']==COUNTRY]
-
-first_day_deaths_list = str_to_date(deaths_partial_db['Date'].values[0])
-lenght_deaths_list = deaths_partial_db['Date'].size
-
-deaths_list = cp.zeros(lenght_deaths_list, dtype=cp.int32)
-for country, date, cumdeath, death in deaths_partial_db.values:
-    deaths_list[(str_to_date(date)-first_day_deaths_list).days] = death
-
-
-#! TODO: la movilidad está puesta como porcentaje de reducción o aumento relativo. 
-#! Habría que poner inicialmente 1 como movilidad y luego irá bajando? asumo? ni idea.
-p_active_complete_db = pandas.read_csv(r'real_data\reducedgoogledataset.csv')
-p_active_partial_db  = p_active_complete_db[p_active_complete_db['country_region']==COUNTRY]
-
-p_active = cp.ones(lenght_deaths_list, dtype=cp.float64)
-for day in range(lenght_deaths_list):
-    p_active[day] -= p_active_partial_db[
-        p_active_partial_db['date']==date_to_str(first_day_deaths_list+datetime.timedelta(day))
-        ]['transit_stations_percent_change_from_baseline']*0.01
+if __name__=='__main__':
     
-time_list =  range(lenght_deaths_list)
-fig,ax = plt.subplots()
-ax.plot(time_list, p_active)
-plt.show()
-exit()
+    COUNTRY = 'Spain'
+    MAX_DAYS = 110
+    TOTAL_POPULATION = 42.7e6
+    N_SIMULATIONS = 500000
+    N_EXECUTIONS = 20
+    VISUALIZE = False
+    SAVE_DATA = True
 
-# p_active_partial_db['transit_stations_percent_change_from_baseline']
-p_active_complete_db.close()
+    fixed_params = cp.zeros(5, dtype=cp.float64)
+    set_fixed_params(fixed_params, COUNTRY)
+    
+    deaths_list = load_deaths_list(COUNTRY)
+    deaths_list_smooth = smooth_deaths_list(deaths_list)
+    p_active = load_p_active(COUNTRY)
+    
+    
+    if VISUALIZE:
+        f1, a1 = plot_deaths(deaths_list)
+        a1.plot(range(len(deaths_list_smooth)), deaths_list_smooth.get(), '-', color='red', label='7 day average')
+        a1.legend()
+        f2, a2 = plot_p_active(p_active)
+        saved_params = cp.zeros((5,N_EXECUTIONS*6), dtype=cp.float64)
+        saved_log_diff = cp.zeros((N_EXECUTIONS*6), dtype=cp.float64)
+    
+    if SAVE_DATA:
+        files = {}
+        mode = 'a'
+        for k,v in param_to_index.items():
+            files.update({k: open(f"generated_data\data_by_country\{COUNTRY}\{k}.dat", mode)})
+
+    for execution in range(N_EXECUTIONS):
+        states = cp.zeros((7,N_SIMULATIONS), dtype=cp.float64)
+        params = cp.zeros((5,N_SIMULATIONS), dtype=cp.float64)
+        log_diff = cp.zeros((N_SIMULATIONS), dtype=cp.float64)
+
+        set_params(params, size=N_SIMULATIONS)
+        states[1] = 1-params[4]
+        states[3] = params[4]
+        
+        
+        evolve_gpu(params, fixed_params, states, p_active, deaths_list_smooth, log_diff, max_days=MAX_DAYS, total_poblation=TOTAL_POPULATION)
+        
+        best_params, best_log_diff = get_best_parameters(params, log_diff, 0.1)
+        
+        
+        # saved_params[:,execution*6:execution*6+6] = best_params[:,:6]
+        # saved_log_diff[execution*6:execution*6+6] = best_log_diff[:6]
+        
+        if SAVE_DATA:
+            for k,f in files.items():
+                f.write('\n'.join(str(p) for p in best_params[param_to_index[k]].get()))
+                f.write('\n')
+        
+        if VISUALIZE:
+            best_states = prepare_states(best_params)
+            fig, ax = plot_states(best_params, fixed_params, best_states, deaths_list_smooth, p_active, max_days=MAX_DAYS+40, total_population=TOTAL_POPULATION)
+        
+            plt.show()
+    
 
 
-
-for i in range(lenght_deaths_list):
-    if i>30:
-        p_active[i]*=0.2
-
-
-fig, ax = plt.subplots()
-N = 34e6
-time_list =  range(lenght_deaths_list+1)
-ax.plot(time_list[:MAX_DAYS], deaths_list.get()[:MAX_DAYS], label='real data')
-
- 
-time = 0
-while time<MAX_DAYS:
-    evolve(params, fixed_params, state, time, p_active)
-    #! El cp.abs está por si acaso. Por que hay veces que con actualizaciones de los datos son negativos
-    log_diff += cp.log(cp.abs(state[5]*N/deaths_list[time]))
-    time+=1
-
-
-## Seleccionar los 5% mejores
-log_diff_index_sorted = cp.argsort(log_diff)
-# save_count = ceil(N_SIMULATIONS*0.005)
-save_count = 1
-
-saved_state = cp.zeros((7,save_count), dtype=cp.float64)
-saved_params = cp.zeros((5,save_count), dtype=cp.float64)
-
-for i in range(save_count):
-    saved_params[:,i] = params[:,log_diff_index_sorted[-i]]
-
-saved_state[1] = 1-saved_params[4]
-saved_state[3] = saved_params[4]
-
-
-# Volver a ejecutar los mejores para plotearlos
-time = 0
-while time < MAX_DAYS:
-    evolve(saved_params, fixed_params, saved_state, time, p_active)
-
-    ax.plot([time for i in range(save_count)], saved_state[5].get()*N, '.', color='black')
-    time+=1
-
-ax.set_title('Deaths per day')
-ax.legend()
-ax.set_ylim(0, max(deaths_list.get()[:MAX_DAYS]))
-
-print(saved_params)
-
-plt.show()
+    # best_params, best_log_diff = get_best_parameters(saved_params, saved_log_diff, 1)
+    # fig, ax = plot_states(best_params, fixed_params, best_states, deaths_list, p_active, max_days=MAX_DAYS, total_population=TOTAL_POPULATION) 
+    # plt.show()

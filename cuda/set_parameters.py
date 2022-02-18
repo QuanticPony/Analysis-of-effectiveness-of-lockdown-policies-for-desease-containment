@@ -3,7 +3,7 @@ import cupy.random as cprand
 
 import pandas
 
-N_SIMULATIONS = 5000
+N_SIMULATIONS = 5000000
 
 ###########################
 ## PRIORS
@@ -11,23 +11,23 @@ N_SIMULATIONS = 5000
 
 def set_permability(params, *, size=N_SIMULATIONS):
     #'permability'
-    params[0]  = cprand.random(size, dtype=cp.float64)*0.1
+    params[0]  = cprand.random(size, dtype=cp.float64)*0.2
 
 def set_lambda(params, *, size=N_SIMULATIONS):
     #'lambda'
-    params[1] = cprand.random(size, dtype=cp.float64)*0.1
+    params[1] = cprand.random(size, dtype=cp.float64) *0.6 + 0.1
 
 def set_IFR(params, *, size=N_SIMULATIONS):
     #'IFR'
-    params[2] = cprand.random(size, dtype=cp.float64)*0.4
+    params[2] = cprand.random(size, dtype=cp.float64)*0.055+0.0001
 
-def set_what(params, *, size=N_SIMULATIONS):
+def set_what(params, *, size=N_SIMULATIONS): # xi
     #'what'
-    params[3] = cprand.random(size, dtype=cp.float64)*0.4
+    params[3] = cprand.random(size, dtype=cp.float64)*(1/7-1/21)+ 1/21 #!TODO  * 1/7 y 1/21
 
 def set_initial_i(params, *, size=N_SIMULATIONS):
     #'initial_i'
-    params[4] = cprand.random(size, dtype=cp.float64)*5/34e6
+    params[4] = cprand.random(size, dtype=cp.float64)*3E-10
     
 def set_params(params, *, size=N_SIMULATIONS):
     set_permability(params, size=size)
@@ -63,7 +63,7 @@ def set_mu(fixed_params):
     
 def set_fixed_params(fixed_params, country, *, data_location='real_data'):
     k_active_db = pandas.read_csv(data_location+r'\kaverageall_locationsPLOSComp.csv')
-    k_conf_db = pandas.read_csv(data_location+r'\kaverageschoolPLOSComp.csv')
+    k_conf_db = pandas.read_csv(data_location+r'\kaveragehomePLOSComp.csv')
     
     set_mu(fixed_params)
     set_eta(fixed_params)

@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-# from phaseportrait.sliders import sliders
-
+from phaseportrait.sliders import sliders
+import cupy as cp
 
 class Simulation:
     # Esto hace falta para los sliders
@@ -106,18 +106,18 @@ class Simulation:
             )
             self.t += 1
     
-    # def add_slider(self, param_name, *, valinit=None, valstep=0.1, valinterval=10):
-    #     self.sliders.update({param_name: sliders.Slider(self, param_name, valinit=valinit, valstep=valstep, valinterval=valinterval)})
+    def add_slider(self, param_name, *, valinit=None, valstep=0.1, valinterval=10):
+        self.sliders.update({param_name: sliders.Slider(self, param_name, valinit=valinit, valstep=valstep, valinterval=valinterval)})
 
-    #     self.fig.subplots_adjust(bottom=0.25)
+        self.fig.subplots_adjust(bottom=0.25)
 
-    #     self.sliders[param_name].slider.on_changed(self.sliders[param_name])
+        self.sliders[param_name].slider.on_changed(self.sliders[param_name])
         
         
     def plot(self, scale=None):
         if scale is not None:
             self.scale = scale
-        # self.dF_args.update({name: slider.value for name, slider in self.sliders.items() if slider.value!= None})
+        self.dF_args.update({name: slider.value for name, slider in self.sliders.items() if slider.value!= None})
 
         for name, slider in self.sliders.items():
             if slider.value!= None:
@@ -148,18 +148,16 @@ class Simulation:
         
 
 
-def funcion_escalon(simulation, t, p_active, step_time):
-    # return (simulation.i<0.03)*1 + (simulation.i>=0.03)*0.10
-    return (t < step_time) * 1 + (t >= step_time) * p_active
+# def funcion_escalon(simulation, t, p_active, step_time):
+#     # return (simulation.i<0.03)*1 + (simulation.i>=0.03)*0.10
+#     return (t < step_time) * 1 + (t >= step_time) * p_active
 
 
 if __name__ == "__main__":
     
     N = 34e6
     I = 1
-    simulation = Simulation(
-        (N-I)/N, 0, I/N, 0, 0, 0, 0, 200, P_active_function=funcion_escalon
-    )
+    simulation = Simulation((N-I)/N, 0, I/N, 0, 0, 0, 0, 200,)
     
     # simulation.add_slider('permeability', valinit=0, valinterval=[0,1], valstep=0.05)
     # simulation.add_slider('p_active', valinit=0.2, valinterval=[0,1], valstep=0.05)
