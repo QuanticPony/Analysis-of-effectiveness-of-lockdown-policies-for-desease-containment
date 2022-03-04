@@ -10,23 +10,7 @@ from evolution import *
 
 COUNTRY = 'Spain'
 MAX_DAYS = 140
-N = 34e6
-
-param_to_index = {
-    'permability' : 0,
-    'lambda' : 1,
-    'IFR' : 2,
-    'what' : 3,
-    'initial_i' : 4,
-    'mu' : 5,
-    'eta' : 6,
-}
-
-fixed_params_to_index = {
-    'home_size' : 0,
-    'k_average_active' : 1,
-    'k_average_confined' : 2,
-}
+N = 42.7e6
 
 epi_poblation_to_index = {
     'sh' : 0,
@@ -214,7 +198,7 @@ def get_best_parameters(params, log_diff, save_percentage):
     save_count = ceil(log_diff.size*save_percentage*0.01)
     # save_count = 6
 
-    saved_params = cp.zeros((7,save_count), dtype=cp.float64)
+    saved_params = cp.zeros((len(param_to_index),save_count), dtype=cp.float64)
     saved_log_diff = cp.zeros(save_count, dtype=cp.float64)
 
     for i in range(save_count):
@@ -260,6 +244,8 @@ def plot_states(params, fixed_params, state, deaths_list, p_active, max_days=MAX
 
 
 
+
+
 def plot_percentiles(params, fixed_params, state, deaths_list, p_active, max_days=MAX_DAYS, total_population=N):
     fig, ax = plt.subplots()
     
@@ -288,6 +274,67 @@ def plot_percentiles(params, fixed_params, state, deaths_list, p_active, max_day
 
 
 
+def correlations(params, n_bins):
+    from matplotlib.ticker import NullFormatter
+    
+    for i_n, i in param_to_index.items():
+        for j_n, j in param_to_index.items():
+            if i < j:
+                
+                try:
+                    x = params[i,:].get()
+                    y = params[j,:].get()
+                except AttributeError:
+                    x = params[i,:]
+                    y = params[j,:]
+                
+                nullfmt = NullFormatter()         # no labels
+                
+                # definitions for the axes
+                left, width = 0.1, 0.65
+                bottom, height = 0.1, 0.65
+                bottom_h = left_h = left + width + 0.02
+                
+                rect_scatter = [left, bottom, width, height]
+                rect_histx = [left, bottom_h, width, 0.2]
+                rect_histy = [left_h, bottom, 0.2, height]
+                
+                # start with a rectangular Figure
+                fig = plt.figure(1, figsize=(8, 8))
+                
+                axScatter = plt.axes(rect_scatter)
+                axHistx = plt.axes(rect_histx)
+                axHistx.set_title("$"+ i_n +"$")
+                axHisty = plt.axes(rect_histy)
+                axHisty.set_title("$"+ j_n +"$")
+                
+                # no labels
+                axHistx.xaxis.set_major_formatter(nullfmt)
+                axHisty.yaxis.set_major_formatter(nullfmt)
+                
+                # the scatter plot:
+                # axScatter.scatter(x, y)
+                
+                
+                # now determine nice limits by hand:
+                xymax = [np.max(np.fabs(x)), np.max(np.fabs(y))]
+                xymin = [np.min(np.fabs(x)), np.min(np.fabs(y))]
+                
+                axScatter.set_xlim((xymin[0], xymax[0]))
+                axScatter.set_ylim((xymin[1], xymax[1]))
+                
+                xbins = np.linspace(xymin[0], xymax[0], n_bins)
+                ybins = np.linspace(xymin[1], xymax[1], n_bins)
+                
+                axScatter.hist2d(x, y, bins=[xbins, ybins])
+                axHistx.hist(x, bins=xbins)
+                axHisty.hist(y, bins=ybins, orientation='horizontal')
+                
+                axHistx.set_xlim(axScatter.get_xlim())
+                axHisty.set_ylim(axScatter.get_ylim())
+                
+                fig.savefig(f'images\images_by_country\{COUNTRY}\correlation_{i_n}_{j_n}.png')
+                plt.close(fig)
 
 
 

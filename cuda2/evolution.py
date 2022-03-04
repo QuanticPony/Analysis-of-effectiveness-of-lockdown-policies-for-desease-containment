@@ -64,25 +64,25 @@ def evolve(params, fixed_params, state, time, p_active):
 
     # r
     # (1-IFR)mu * i
-    state[6] =  (1-params[2]) * params[5] * state[3]
+    state[6] =  (1-params[2]) * fixed_params[4] * state[3]
 
     # pd
     # mu*IFR*i + pd*(1-what)
-    state[4] = params[5]*params[2]*state[3] + state[4]*(1-params[3])
+    state[4] = fixed_params[4]*params[2]*state[3] + state[4]*(1-params[3])
 
     # i
     # e*eta + i*(1-mu)
-    state[3] = state[2]*params[6] + state[3]*(1-params[5])
+    state[3] = state[2]*fixed_params[3] + state[3]*(1-fixed_params[4])
 
     # e
     # S*(1-p_secure_in_home) * p_infection + e*(1-eta)
-    # state[2] = S*(1-p_secure_in_home)*p_infection + state[3]*(1-params[6])
+    # state[2] = S*(1-p_secure_in_home)*p_infection + state[3]*(1-fixed_params[3])
     state[2] = S * ((p_active[time]) * p_infection_active \
                     + (1-p_active[time]) * (1-p_home_is_secure*(1-params[0])) * p_infection_confined) \
-                + state[2]*(1-params[6])
+                + state[2]*(1-fixed_params[3])
                 
     # state[2] = S * ((p_active[time]) * p_infection_active \
     #                 + (1-p_active[time]) * (1-p_home_is_secure)*(1-params[0]) * p_infection_confined \
     #                 + (1-p_active[time]) * (1-p_home_is_secure)*params[0] * p_infection_active \
     #                 + (1-p_active[time]) * (p_home_is_secure)*params[0] * p_infection_active) \
-    #             + state[2]*(1-params[6])
+    #             + state[2]*(1-fixed_params[3])

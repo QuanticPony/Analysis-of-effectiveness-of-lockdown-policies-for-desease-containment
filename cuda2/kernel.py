@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from analysis import *
+
 from simulation_functions import *
 
 if __name__=='__main__':
@@ -7,29 +8,20 @@ if __name__=='__main__':
     COUNTRY = 'Spain'
     MAX_DAYS = 110
     TOTAL_POPULATION = 42.7e6
-    N_SIMULATIONS = 500000
-    N_EXECUTIONS = 40
-    VISUALIZE = True
-    SAVE_DATA = False
-    CORRELATIONS = False
+    N_SIMULATIONS = 1000000
+    N_EXECUTIONS = 5
+    VISUALIZE = False
+    SAVE_DATA = True
+    VISUALIZE_CORRELATIONS = False
 
-    fixed_params = cp.zeros(4, dtype=cp.float64)
+    fixed_params = cp.zeros(len(fixed_params_to_index), dtype=cp.float64)
     set_fixed_params(fixed_params, COUNTRY)
     
     deaths_list = load_deaths_list(COUNTRY)
     deaths_list_smooth = smooth_deaths_list(deaths_list)
     p_active = load_p_active(COUNTRY)
     
-    
-    # if VISUALIZE:
-    #     f1, a1 = plot_deaths(deaths_list)
-    #     a1.plot(range(len(deaths_list_smooth[:MAX_DAYS])), deaths_list_smooth[:MAX_DAYS].get(), '-', color='red', label='7 day average')
-    #     a1.legend()
-    #     f2, a2 = plot_p_active(p_active)
-    #     saved_params = cp.zeros((5,N_EXECUTIONS*6), dtype=cp.float64)
-    #     saved_log_diff = cp.zeros((N_EXECUTIONS*6), dtype=cp.float64)
 
-    
     if SAVE_DATA:
         files = {}
         mode = 'a'
@@ -37,9 +29,11 @@ if __name__=='__main__':
             files.update({k: open(f"generated_data\data_by_country\{COUNTRY}\{k}.dat", mode)})
         files.update({'log_diff': open(f"generated_data\data_by_country\{COUNTRY}\log_diff.dat", mode)})
 
+
+
     for execution in range(N_EXECUTIONS):
         states = cp.zeros((7,N_SIMULATIONS), dtype=cp.float64)
-        params = cp.zeros((7,N_SIMULATIONS), dtype=cp.float64)
+        params = cp.zeros((len(param_to_index),N_SIMULATIONS), dtype=cp.float64)
         log_diff = cp.zeros((N_SIMULATIONS), dtype=cp.float64)
 
         set_params(params, size=N_SIMULATIONS)
@@ -69,7 +63,7 @@ if __name__=='__main__':
                 fig_.savefig(f'images\images_by_country\{COUNTRY}\{execution}_bests.png')
         
         if VISUALIZE:
-            best_param = cp.zeros((7,3), dtype=cp.float64)
+            best_param = cp.zeros((len(param_to_index),3), dtype=cp.float64)
             for i in range(best_params.shape[0]):
                 _copy = best_params[i].copy()
                 _copy.sort()
@@ -96,18 +90,18 @@ if __name__=='__main__':
                 fig, ax = plt.subplots()
                 
                 ax.hist(params[i].get(), 30, density=True)
-                ax.hist(best_params[i].get(), 30, density=True, weights=1/best_log_diff.get())
+                ax.hist(best_params[i].get(), 30, density=True)#, weights=1/best_log_diff.get())
                 y_min, y_max = ax.get_ylim()
                 ax.vlines(best_param[i,0].get(), ymin=y_min, ymax=y_max, color='red')
-                # ax.vlines(k_array_median, ymin=y_min, ymax=y_max, label='Median', color='orange')
-                # ax.vlines(k_array_percentil_5, ymin=y_min, ymax=y_max, label='Percentile 5', color='red')
-                # ax.vlines(k_array_percentil_95, ymin=y_min, ymax=y_max, label='Percentile 95', color='purple')
+                ax.vlines(best_param[i,1].get(), ymin=y_min, ymax=y_max, color='orange')
+                ax.vlines(best_param[i,2].get(), ymin=y_min, ymax=y_max, color='purple')
                 ax.set_title(k.capitalize())
 
-            plt.show()
-            
-                
-        if CORRELATIONS:
+            # plt.show()
+        
+          
+        
+        if VISUALIZE_CORRELATIONS:
             correlations(best_params, 15)
             break
         
