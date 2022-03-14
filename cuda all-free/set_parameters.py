@@ -11,14 +11,14 @@ param_to_index = {
     'IFR' : 2,
     'what' : 3,
     'initial_i' : 4,
+    'eta' : 5,
+    'mu' : 6,
 }
 
 fixed_params_to_index = {
     'home_size' : 0,
     'k_average_active' : 1,
     'k_average_confined' : 2,
-    'eta' : 3,
-    'mu' : 4,
 }
 
 ###########################
@@ -27,11 +27,11 @@ fixed_params_to_index = {
 
 def set_permability(params, size=N_SIMULATIONS):
     #'permability'
-    params[param_to_index['permability']]  = cprand.random(size, dtype=cp.float64)*0.16
+    params[param_to_index['permability']]  = cprand.random(size, dtype=cp.float64)*0.3
 
 def set_lambda(params, size=N_SIMULATIONS):
     #'lambda'
-    params[param_to_index['lambda']] = cprand.random(size, dtype=cp.float64) * (0.16-0.07) + 0.07
+    params[param_to_index['lambda']] = cprand.random(size, dtype=cp.float64) * (0.20-0.05) + 0.05
 
 def set_IFR(params, size=N_SIMULATIONS):
     #'IFR'
@@ -39,15 +39,19 @@ def set_IFR(params, size=N_SIMULATIONS):
 
 def set_what(params, size=N_SIMULATIONS): # xi
     #'what'
-    params[param_to_index['what']] = cprand.random(size, dtype=cp.float64) * (1/6-1/30) + 1/32 #! * 1/7 y 1/21
+    params[param_to_index['what']] = cprand.random(size, dtype=cp.float64) * (1/6-1/32) + 1/32 #! * 1/7 y 1/21
 
 def set_initial_i(params, size=N_SIMULATIONS):
     #'initial_i'
-    params[param_to_index['initial_i']] = cprand.random(size, dtype=cp.float64) * 1E-7
+    params[param_to_index['initial_i']] = cprand.random(size, dtype=cp.float64) * 8E-8
     
 def set_mu_variable(params, size=N_SIMULATIONS):
     #'mu'
     params[param_to_index['mu']] = cprand.random(size, dtype=cp.float64) * (0.5-0.1) + 0.1 # 1/4.2
+
+def set_eta_variable(params, size=N_SIMULATIONS):
+    #'eta
+    params[param_to_index['eta']] = cprand.random(size, dtype=cp.float64) * (0.4-0.1) + 0.1
     
 def set_params(params, size=N_SIMULATIONS):
     set_permability(params, size=size)
@@ -55,10 +59,13 @@ def set_params(params, size=N_SIMULATIONS):
     set_IFR(params, size=size)
     set_what(params, size=size)
     set_initial_i(params, size=size)
-    try:
+    
+    if 'mu' in param_to_index.keys():
         set_mu_variable(params, size=size)
-    except KeyError:
-        pass
+    
+    if 'eta' in param_to_index.keys():
+        set_eta_variable(params, size=size)
+    
     
 #######################################################################################  
     
@@ -89,11 +96,11 @@ def set_fixed_params(fixed_params, country, *, data_location='real_data'):
     k_active_db = pandas.read_csv(data_location+r'\kaverageall_locationsPLOSComp.csv')
     k_conf_db = pandas.read_csv(data_location+r'\kaveragehomePLOSComp.csv')
     
-    set_eta(fixed_params)
     set_home_size(fixed_params, country, 0)
     set_k_average_active(fixed_params, country, k_active_db)
     set_k_average_confined(fixed_params, country, k_conf_db)
-    try:
+    if 'mu' in fixed_params_to_index.keys():
         set_mu(fixed_params)
-    except KeyError:
-        pass
+
+    if 'eta' in fixed_params_to_index.keys():
+        set_eta(fixed_params)

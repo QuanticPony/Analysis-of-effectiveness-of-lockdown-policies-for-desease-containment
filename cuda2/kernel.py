@@ -1,3 +1,4 @@
+from cProfile import label
 import matplotlib.pyplot as plt
 from analysis import *
 
@@ -6,10 +7,10 @@ from simulation_functions import *
 if __name__=='__main__':
     
     COUNTRY = 'Spain'
-    MAX_DAYS = 110
-    TOTAL_POPULATION = 42.7e6
-    N_SIMULATIONS = 1000000
-    N_EXECUTIONS = 5
+    MAX_DAYS = 120
+    TOTAL_POPULATION = 47.5e6
+    N_SIMULATIONS = 2000000
+    N_EXECUTIONS = 1
     VISUALIZE = False
     SAVE_DATA = True
     VISUALIZE_CORRELATIONS = False
@@ -43,7 +44,7 @@ if __name__=='__main__':
         
         evolve_gpu(params, fixed_params, states, p_active, deaths_list_smooth, log_diff, max_days=MAX_DAYS, total_poblation=TOTAL_POPULATION)
         
-        best_params, best_log_diff = get_best_parameters(params, log_diff, 0.1)
+        best_params, best_log_diff = get_best_parameters(params, log_diff, 5)
         
         if SAVE_DATA:
             for i, l in enumerate(best_log_diff):
@@ -57,10 +58,37 @@ if __name__=='__main__':
                             f.write('\n') 
                     
             #! Esto habría que quitarlo más adelante
-            if execution==0:
-                best_states = prepare_states(best_params)
-                fig_, ax_ = plot_states(best_params, fixed_params, best_states, deaths_list_smooth, p_active, max_days=MAX_DAYS+40, total_population=TOTAL_POPULATION)
-                fig_.savefig(f'images\images_by_country\{COUNTRY}\{execution}_bests.png')
+        if execution==0:
+            best_states = prepare_states(best_params)
+
+            time = 0
+            _5p = []
+            _95p = []
+            _median = []
+
+            while time<MAX_DAYS+40:
+                time+=1
+                evolve(best_params, fixed_params, best_states, time, p_active)
+                deaths = best_states[5]*TOTAL_POPULATION
+                deaths.sort()
+                _median.append(median(deaths).get())
+                _5p.append(percentil(deaths, 5).get())
+                _95p.append(percentil(deaths, 95).get())
+
+            fig_, ax_ = plt.subplots()
+            time_list =  range(MAX_DAYS+40)
+
+            ax_.fill_between(time_list, _5p, _95p, alpha=0.2)
+            ax_.plot(time_list, _median, '-.', color='purple', label='median')
+
+            ax_.plot(time_list[:MAX_DAYS], deaths_list.get()[:MAX_DAYS], color='red', label='real data')
+            ax_.plot(time_list[MAX_DAYS:MAX_DAYS+40], deaths_list.get()[MAX_DAYS:MAX_DAYS+40], '-.', color='red', label='real data')
+            ax_.set_title('Deaths per day')
+            ax_.legend()
+            ax_.set_ylim([0, max(deaths_list[:MAX_DAYS+40])*1.1])
+            fig_.savefig(f'images\images_by_country\{COUNTRY}\{execution}_bests.png')
+            plt.close(fig_)
+                
         
         if VISUALIZE:
             best_param = cp.zeros((len(param_to_index),3), dtype=cp.float64)
@@ -76,30 +104,8 @@ if __name__=='__main__':
                 
             best_state = prepare_states(best_param)
             fig, ax = plot_percentiles(best_param, fixed_params, best_state, deaths_list_smooth, p_active, max_days=MAX_DAYS+40, total_population=TOTAL_POPULATION)
-            
-            # for k,i in param_to_index.items():
-            #     print(f"<{k}> = {(cp.mean(best_param[i])+best_param[i])/2} ∓ {np.sqrt(cp.var(best_params[i]))}")
-            print(best_log_diff[0], best_log_diff[1])
-            
-            best_states = prepare_states(best_params)
-            fig_, ax_ = plot_states(best_params, fixed_params, best_states, deaths_list, p_active, max_days=MAX_DAYS+40, total_population=TOTAL_POPULATION)
-            fig_.savefig(f'images\images_by_country\{COUNTRY}\{execution}_bests.png')
-            
-            
-            for k,i in param_to_index.items():
-                fig, ax = plt.subplots()
-                
-                ax.hist(params[i].get(), 30, density=True)
-                ax.hist(best_params[i].get(), 30, density=True)#, weights=1/best_log_diff.get())
-                y_min, y_max = ax.get_ylim()
-                ax.vlines(best_param[i,0].get(), ymin=y_min, ymax=y_max, color='red')
-                ax.vlines(best_param[i,1].get(), ymin=y_min, ymax=y_max, color='orange')
-                ax.vlines(best_param[i,2].get(), ymin=y_min, ymax=y_max, color='purple')
-                ax.set_title(k.capitalize())
-
-            # plt.show()
-        
-          
+            fig.savefig(f'images\images_by_country\{COUNTRY}\{execution}_percentiles.png')
+            plt.close(fig)
         
         if VISUALIZE_CORRELATIONS:
             correlations(best_params, 15)

@@ -10,7 +10,7 @@ from evolution import *
 
 COUNTRY = 'Spain'
 MAX_DAYS = 140
-N = 42.7e6
+N = 47.5e6
 
 epi_poblation_to_index = {
     'sh' : 0,
@@ -145,7 +145,7 @@ def load_p_active(requested_country):
  
 def evolve_gpu(params, fixed_params, state, p_active, deaths_list, log_diff, max_days=MAX_DAYS, total_poblation=N):
     
-    AJUSTE = 5
+    AJUSTE = 1
     time = -1
     
     while time<max_days:
@@ -188,7 +188,7 @@ def evolve_gpu_no_diff(params, fixed_params, state, p_active, max_days=MAX_DAYS)
 
 
 
-## Seleccionar los % mejores
+## Seleccionar los 5% mejores
 def get_best_parameters(params, log_diff, save_percentage):
     "Retuns the best `save_percentage`% `params` of the simulations given their `log_diff` with real data." 
     log_diff_index_sorted = cp.argsort(log_diff)
