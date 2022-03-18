@@ -3,10 +3,11 @@ import matplotlib.pyplot as plt
 from simulation_functions import *
 
 if __name__=='__main__':
-    COUNTRY = 'Spain'
-    MAX_DAYS = 140
+    COUNTRY = 'Italy'
     
     (deaths_list, first_deaths_list_day, deaths_list_lenght) =  prepare_deaths_list(COUNTRY)
+    
+    save_deaths_list(COUNTRY, deaths_list)
     
     p_active = prepare_p_active_list(COUNTRY, first_deaths_list_day, deaths_list_lenght, 
                           using='retail_and_recreation_percent_change_from_baseline')
