@@ -12,7 +12,7 @@ param_to_index = {
     'what' : 3,
     # 'first_i' : 4,
     # 'mu' : 5,
-    # 'eta' : 5,
+    # 'eta' : 6,
     'offset' : 4,
     'initial_i' : 5,
 }
@@ -31,11 +31,11 @@ fixed_params_to_index = {
 
 def set_permability(params, size=N_SIMULATIONS):
     #'permability'
-    params[param_to_index['permability']]  = cprand.random(size, dtype=cp.float64)*0.3
+    params[param_to_index['permability']]  = cprand.random(size, dtype=cp.float64) * 0.3
 
 def set_lambda(params, size=N_SIMULATIONS):
     #'lambda'
-    params[param_to_index['lambda']] = cprand.random(size, dtype=cp.float64) * (0.13-0.06) + 0.06
+    params[param_to_index['lambda']] = cprand.random(size, dtype=cp.float64) * (0.14-0.04) + 0.04
 
 def set_IFR(params, size=N_SIMULATIONS):
     #'IFR'
@@ -44,15 +44,15 @@ def set_IFR(params, size=N_SIMULATIONS):
 def set_what(params, size=N_SIMULATIONS): # xi
     #'what'
     # params[param_to_index['what']] = cprand.random(size, dtype=cp.float64) * (1/5-1/32) + 1/32 #! * 1/7 y 1/21
-    params[param_to_index['what']] = cprand.random(size, dtype=cp.float64) * (1/7-1/21) + 1/21
+    params[param_to_index['what']] = cprand.random(size, dtype=cp.float64) * (1/6-1/16) + 1/16
     
 def set_offset(params, size=N_SIMULATIONS): 
     # 'offset' 
-    params[param_to_index['offset']] = cprand.randint(-14, 14, size, dtype=cp.int32)
+    params[param_to_index['offset']] = 0 + cprand.randint(-15, 5, size, dtype=cp.int32)
     
 def set_initial_i(params, size=N_SIMULATIONS):
     #'initial_i'
-    params[param_to_index['initial_i']] = cprand.random(size, dtype=cp.float64) * 5/47e6
+    params[param_to_index['initial_i']] = cprand.random(size, dtype=cp.float64) * 100/48e6
     
 def set_mu_variable(params, size=N_SIMULATIONS):
     #'mu'
@@ -86,7 +86,7 @@ def set_params(params, size=N_SIMULATIONS):
 def set_home_size(fixed_params, country, pd_dataframe):
     #'home_size'
     #! TODO: tamaño del hogar. Tengo que buscarlo? O tienen ya referencias?
-    fixed_params[fixed_params_to_index['home_size']] = 2.5
+    fixed_params[fixed_params_to_index['home_size']] = 2.0
 
 def set_k_average_active(fixed_params, country, pd_dataframe):
     #'k_average_active'

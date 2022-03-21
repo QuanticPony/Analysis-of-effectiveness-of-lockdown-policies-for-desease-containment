@@ -5,9 +5,9 @@ from simulation_functions import *
 
 if __name__=='__main__':
     
-    COUNTRY = 'Spain'
-    MAX_DAYS = 90
-    TOTAL_POPULATION = 47.5e6
+    COUNTRY = 'Portugal'
+    MAX_DAYS = 100
+    TOTAL_POPULATION = 10.2e6
     # N_SIMULATIONS = 100000
     # N_EXECUTIONS = 20
 
@@ -30,10 +30,10 @@ if __name__=='__main__':
     # s.add_slider('initial_i', valinit=1e-13, valinterval=[0, 0.001/TOTAL_POPULATION], valstep=0.00001/(TOTAL_POPULATION))
         
     s.add_slider('permability', valinit=0.04, valinterval=[0,0.20], valstep=0.001)
-    s.add_slider('lambda', valinit=0.60, valinterval=[0.05,0.12], valstep=0.001)
+    s.add_slider('lambda', valinit=0.60, valinterval=[0.05,0.50], valstep=0.001)
     s.add_slider('IFR', valinit=0.00955, valinterval=[0.009,0.01], valstep=0.0001)
-    s.add_slider('what', valinit=0.08, valinterval=[1/28,1/6], valstep=0.0001)
-    s.add_slider('initial_i', valinit=-5, valinterval=[-10, 0], valstep=1)
+    s.add_slider('what', valinit=0.08, valinterval=[1/16,1/6], valstep=0.0001)
+    s.add_slider('initial_i', valinit=1, valinterval=[0, 0.5/TOTAL_POPULATION], valstep=0.01/TOTAL_POPULATION)
     # s.add_slider('mu', valinit=0.3, valinterval=[0.1, 0.5], valstep=0.01)
         
     s.plot()

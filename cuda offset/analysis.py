@@ -19,6 +19,8 @@ def correlations(params, n_bins, log_diff, country):
     
     for i_n, i in param_to_index.items():
         for j_n, j in param_to_index.items():
+            # if i==4 or j==4:
+            #     continue
             if i < j:
                 
                 try:
@@ -63,22 +65,23 @@ def correlations(params, n_bins, log_diff, country):
                 axScatter.set_xlim((xymin[0], xymax[0]))
                 axScatter.set_ylim((xymin[1], xymax[1]))
                 
-                if i not in [4]:
+                if i != 4:
                     xbins = np.linspace(xymin[0], xymax[0], n_bins)
                 else:
-                    n_bins = int(xymax[0] - xymin[0]) +1 
+                    _n_bins = int(xymax[0] - xymin[0]) +1 
                     xbins = np.arange(int(xymin[0])-0.5, int(xymax[0])+0.5)
+                    ybins = np.linspace(xymin[1], xymax[1], _n_bins)
                     
-                if j not in [4]:
+                if j != 4:
                     ybins = np.linspace(xymin[1], xymax[1], n_bins)
                 else:
-                    n_bins = int(xymax[1] - xymin[1]) +1 
-                    xbins = np.linspace(xymin[0], xymax[0], n_bins)
+                    _n_bins = int(xymax[1] - xymin[1]) +1 
+                    xbins = np.linspace(xymin[0], xymax[0], _n_bins)
                     ybins = np.arange(int(xymin[1])-0.5, int(xymax[1])+0.5)
                 
-                axScatter.hist2d(x, y, bins=[xbins, ybins])#, weights=log_diff)
-                axHistx.hist(x, bins=xbins)#, weights=log_diff)
-                axHisty.hist(y, bins=ybins, orientation='horizontal')#, weights=log_diff)
+                axScatter.hist2d(x, y, bins=[xbins, ybins], weights=log_diff)
+                axHistx.hist(x, bins=xbins, weights=log_diff)
+                axHisty.hist(y, bins=ybins, orientation='horizontal', weights=log_diff)
                 
                 axHistx.set_xlim(axScatter.get_xlim())
                 axHisty.set_ylim(axScatter.get_ylim())
@@ -124,9 +127,9 @@ def plot_the_plots(country=COUNTRY, max_days=MAX_DAYS):
         
         if k in ['offset']:
             k_array = list(map(int, k_array))
-            ax.hist(k_array, np.arange(min(k_array)-0.5, max(k_array)+0.5), density=True, align='mid')#, weights=log_diff)
+            ax.hist(k_array, np.arange(min(k_array)-0.5, max(k_array)+0.5), density=True, align='mid', weights=log_diff)
         else:
-            ax.hist(k_array, 20, density=True)#, weights=log_diff)
+            ax.hist(k_array, 20, density=True, weights=log_diff)
         
         
         y_min, y_max = ax.get_ylim()
@@ -160,6 +163,6 @@ def plot_the_plots(country=COUNTRY, max_days=MAX_DAYS):
         
 if __name__=='__main__':
     
-    COUNTRY = 'Spain'
+    COUNTRY = 'Italy'
     MAX_DAYS = 60
     plot_the_plots(COUNTRY, MAX_DAYS)

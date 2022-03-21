@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import os
+
 
 from set_parameters import *
 from simulation_functions import *
@@ -6,10 +8,14 @@ from analysis import *
 
 if __name__=='__main__':
     
-    COUNTRY = 'Italy'
+    COUNTRY = 'Spain'
     MAX_DAYS = 100
     TOTAL_POPULATION = 47.5e6
-    N_SIMULATIONS = 1000000
+    # TOTAL_POPULATION = 59.26e6
+    # TOTAL_POPULATION= 84.8e6
+    # TOTAL_POPULATION = 10.2e6
+    # TOTAL_POPULATION = 68.5e6
+    N_SIMULATIONS = 2000000
     N_EXECUTIONS = 1
     VISUALIZE = False
     SAVE_DATA = True
@@ -28,7 +34,9 @@ if __name__=='__main__':
         files = {}
         mode = 'a'
         for k,v in param_to_index.items():
-            files.update({k: open(f"generated_data\data_by_country\{COUNTRY}\{k}.dat", mode)})
+            filename = f"generated_data\data_by_country\{COUNTRY}\{k}.dat" 
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
+            files.update({k: open(filename, mode)})
         files.update({'log_diff': open(f"generated_data\data_by_country\{COUNTRY}\log_diff.dat", mode)})
 
 
@@ -103,7 +111,9 @@ if __name__=='__main__':
                 ax_rec.set_title('Recovered % at May 15 2020')
                 ax_rec.set_ylabel('Relative frecuency')
                 ax_rec.set_xlabel('Recovered %')
-                fig_rec.savefig(f'images/images_by_country/{COUNTRY}/recovered_histogram.png')
+                filename_path = f'images/images_by_country/{COUNTRY}/'
+                os.makedirs(filename_path, exist_ok=True)
+                fig_rec.savefig(f'{filename_path}/recovered_histogram.png')
                 plt.close(fig_rec)
                     
                 deaths[0,:] = 0

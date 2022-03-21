@@ -9,7 +9,7 @@ from set_parameters import *
 from evolution import *
 
 COUNTRY = 'Spain'
-MAX_DAYS = 140
+MAX_DAYS = 100
 N = 47.5e6
 
 epi_poblation_to_index = {

@@ -152,7 +152,7 @@ def evolve_gpu(params, fixed_params, state, p_active, deaths_list, log_diff, max
     # _time[:] = params[param_to_index['initial_i']][:]
     _offset[:] = params[param_to_index['offset']][:]
 
-    LOG_SQUARE_THRESHOLD = 600
+    LOG_SQUARE_THRESHOLD = 500
     
     __time_ref = 0
     _time = 0
@@ -163,12 +163,12 @@ def evolve_gpu(params, fixed_params, state, p_active, deaths_list, log_diff, max
         evolve(params, fixed_params, state, p_active[index * (index>=0)])
         deaths = state[5]*total_poblation
         
-        deaths_ref = 0 + deaths_list[_time * (_time>=0)] * (_time>=0)
-        # deaths_ref = 0 + deaths_list[__time_ref]
+        # deaths_ref = 0 + deaths_list[_time * (_time>=0)] * (_time>=0)
+        deaths_ref = 0 + deaths_list[__time_ref]
         
 
-        diff = deaths - deaths_ref
-        log_diff += 0.001*cp.square(diff) * (deaths_ref>=0) * (_time<max_days) * (deaths_ref>LOG_SQUARE_THRESHOLD)
+        diff = (deaths - deaths_ref)
+        log_diff += 0.0001*cp.square(diff) * (deaths_ref>=0) * (_time<max_days) * (deaths_ref>LOG_SQUARE_THRESHOLD)
 
 
         diff = deaths/(deaths_ref + 1 *(deaths_ref==0))# * (deaths_ref<0)
@@ -346,14 +346,14 @@ class Simulation:
                 self.fixed_params[fixed_params_to_index[p]] = s.value
         
         self.state = np.zeros(7, dtype=np.float64) 
-        self.state[1] = 1- 1/self.total_population
-        self.state[3] = 1/self.total_population
+        self.state[1] = 1- self.parameters[param_to_index['initial_i']]
+        self.state[3] = self.parameters[param_to_index['initial_i']]
         
         time_list =  range(len(self.deaths_list)+1)
         self.ax.plot(time_list[:self.max_days], smooth_deaths_list(self.deaths_list[:self.max_days]).get() , label='smooth data')
         self.ax.plot(time_list[:self.max_days], self.deaths_list[:self.max_days], label='real data')
         
-        time = -1 + self.parameters[param_to_index['initial_i']]
+        time = -1
         deaths_list = np.zeros(self.max_days)
         log_diff = 0
         actual_time = -1
