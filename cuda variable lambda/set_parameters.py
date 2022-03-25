@@ -13,6 +13,7 @@ param_to_index = {
     'initial_i' : 4,
     # 'mu' : 5,
     # 'eta' : 5,
+    # 'offset' : 3,
 }
 
 fixed_params_to_index = {
@@ -29,11 +30,11 @@ fixed_params_to_index = {
 
 def set_permability(params, size=N_SIMULATIONS):
     #'permability'
-    params[param_to_index['permability']]  = cprand.random(size, dtype=cp.float64)*0.2
+    params[param_to_index['permability']]  = cprand.random(size, dtype=cp.float64)*0.3
 
-def set_lambda(params, size=N_SIMULATIONS):
+def set_lambda(params_lambda, size=N_SIMULATIONS):
     #'lambda'
-    params[param_to_index['lambda']] = cprand.random(size, dtype=cp.float64) * (0.16-0.00) + 0.00
+    params_lambda[:,:] = cprand.random(params_lambda.shape, dtype=cp.float64) * (0.22-0.00) + 0.00
 
 def set_IFR(params, size=N_SIMULATIONS):
     #'IFR'
@@ -42,15 +43,15 @@ def set_IFR(params, size=N_SIMULATIONS):
 def set_what(params, size=N_SIMULATIONS): # xi
     #'what'
     # params[param_to_index['what']] = cprand.random(size, dtype=cp.float64) * (1/5-1/32) + 1/32 #! * 1/7 y 1/21
-    params[param_to_index['what']] = cprand.random(size, dtype=cp.float64) * (1/6-1/16) + 1/16
-
-def set_first_i(params, size=N_SIMULATIONS):
-    #'first_i'
-    params[param_to_index['first_i']] = cprand.randint(-5, 5, size, dtype=cp.int32)
+    params[param_to_index['what']] = cprand.random(size, dtype=cp.float64) * (1/7-1/21) + 1/21
+    
+def set_offset(params, size=N_SIMULATIONS): 
+    # 'offset' 
+    params[param_to_index['offset']] = cprand.randint(-14, 14, size, dtype=cp.int32)
     
 def set_initial_i(params, size=N_SIMULATIONS):
     #'initial_i'
-    params[param_to_index['initial_i']] = cprand.random(size, dtype=cp.float64) * 1e-8
+    params[param_to_index['initial_i']] = cprand.random(size, dtype=cp.float64) * 10e-6
     
 def set_mu_variable(params, size=N_SIMULATIONS):
     #'mu'
@@ -60,17 +61,16 @@ def set_eta_variable(params, size=N_SIMULATIONS):
     #'eta
     params[param_to_index['eta']] = cprand.random(size, dtype=cp.float64) * (0.4-0.1) + 0.1
     
-def set_params(params, size=N_SIMULATIONS):
+def set_params(params, params_lambda, size=N_SIMULATIONS):
     set_permability(params, size=size)
-    set_lambda(params, size=size)
+    set_lambda(params_lambda, size=size)
     set_IFR(params, size=size)
     set_what(params, size=size)
-    if 'first_i' in param_to_index.keys():
-        set_first_i(params, size=size)
+    set_initial_i(params, size=size)
     
-    if 'initial_i' in param_to_index.keys():
-        set_initial_i(params, size=size)
-    
+    if 'offset' in param_to_index.keys():
+        set_offset(params, size=size)
+        
     if 'mu' in param_to_index.keys():
         set_mu_variable(params, size=size)
     

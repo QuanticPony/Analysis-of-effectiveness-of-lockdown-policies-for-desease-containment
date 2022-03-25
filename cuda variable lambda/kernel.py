@@ -7,23 +7,19 @@ from analysis import *
 
 if __name__=='__main__':
     
-    COUNTRY = 'France'
-    MAX_DAYS = 100
-    
-    # TOTAL_POPULATION = 47.5e6
-    # TOTAL_POPULATION = 59.26e6
-    # TOTAL_POPULATION= 84.8e6
-    # TOTAL_POPULATION = 10.2e6
-    # TOTAL_POPULATION = 68.5e6
+    COUNTRY = 'Spain'
+    MAX_DAYS = 120
+    TOTAL_POPULATION = 47.5e6
     # TOTAL_POPULATION = 51.8e6
-    TOTAL_POPULATION = 65.5e6
-    N_SIMULATIONS = 5000000
-    N_EXECUTIONS = 3
+    N_SIMULATIONS = 3000000
+    N_EXECUTIONS = 1
     VISUALIZE = False
     SAVE_DATA = True
     ANALYZE_DATA = True
     
     ERASE_PREV_DATA = True
+    
+    N_LAMBDAS = 3
 
     fixed_params = cp.zeros(len(fixed_params_to_index), dtype=cp.float64)
     set_fixed_params(fixed_params, COUNTRY)
@@ -42,19 +38,24 @@ if __name__=='__main__':
             os.makedirs(os.path.dirname(filename), exist_ok=True)
             files.update({k: open(filename, mode)})
         files.update({'log_diff': open(f"generated_data\data_by_country\{COUNTRY}\log_diff.dat", mode)})
+        files.update({'lambdas': open(f"generated_data\data_by_country\{COUNTRY}\lambdas.dat", mode)})
 
 
 
     for execution in range(N_EXECUTIONS):
+        states = cp.zeros((7,N_SIMULATIONS), dtype=cp.float64)
         params = cp.zeros((len(param_to_index),N_SIMULATIONS), dtype=cp.float64)
+        params_lambda = cp.zeros((N_LAMBDAS, N_SIMULATIONS), dtype=cp.float64)
         log_diff = cp.zeros((N_SIMULATIONS), dtype=cp.float64)
 
-        set_params(params, size=N_SIMULATIONS)
-        states = prepare_states(params, TOTAL_POPULATION)
+        set_params(params, params_lambda, size=N_SIMULATIONS)
+        states[1] = 1- params [param_to_index['initial_i']]
+        states[3] = params [param_to_index['initial_i']]
         
-        evolve_gpu(params, fixed_params, states, p_active, deaths_list_smooth, log_diff, max_days=MAX_DAYS, total_poblation=TOTAL_POPULATION)
         
-        best_params, best_log_diff = get_best_parameters(params, log_diff, 0.1)
+        evolve_gpu(params, fixed_params, states, p_active, deaths_list_smooth, log_diff, params_lambda=params_lambda, max_days=MAX_DAYS, total_poblation=TOTAL_POPULATION)
+        
+        best_params, best_log_diff, best_params_lambda = get_best_parameters(params, log_diff, 0.1, params_lambda)
         
         if SAVE_DATA:
             for i, l in enumerate(best_log_diff):
@@ -63,6 +64,12 @@ if __name__=='__main__':
                     if k=='log_diff':
                         f.write(str(best_log_diff[i]))
                         f.write('\n')
+                        continue
+                    if k=='lambda':
+                        continue
+                    if k=='lambdas':
+                        f.write('\t'.join(map(str, best_params_lambda[:,i])))
+                        f.write('\n')
                     else:
                         f.write(str(best_params[param_to_index[k]][i]))
                         f.write('\n') 
@@ -70,48 +77,59 @@ if __name__=='__main__':
             #! Esto habría que quitarlo más adelante
             if execution==0:
                 best_states = prepare_states(best_params, TOTAL_POPULATION)
-                
-                # best_params[0] = cp.random.random(size=best_params.shape[1])*0.1
-                # best_params[1] = 0.086
-                # best_params[2] = 0.0097
-                # best_params[3] = 0.0869
-                # best_params[4] = -2
 
                 _5p = []
                 _95p = []
                 _median = []
                 
                 NEW_MAX_DAYS= MAX_DAYS+40
-                # time = best_params[param_to_index['first_i']]
                 deaths = cp.zeros([NEW_MAX_DAYS, best_params.shape[1]])
                 _range = cp.arange(0, best_params.shape[1]) 
-                _time = cp.zeros(best_params.shape[1], dtype=cp.int32)
-                # _time[:] = time[:]
+                
+                # _time = cp.zeros(best_params.shape[1], dtype=cp.int32)
+                # _offset = cp.zeros(best_params.shape[1], dtype=cp.int32)
+                # _time[:] = best_params[param_to_index['initial_i']][:]
+                # _offset[:] = best_params[param_to_index['offset']][:]
                 
                 recovered_array = cp.zeros(best_params.shape[1])
+                last_infected = cp.zeros(best_params.shape[1])
+                reproductive_number = cp.zeros((NEW_MAX_DAYS,best_params.shape[1]))
                 
-
-                __time = 0
+                # p_active_threshold_for_lambda = 0.5
+                # _frst_wave_passed = False
+                _time = 0
                 # while (_time<NEW_MAX_DAYS).any():
-                while __time<NEW_MAX_DAYS:
+                while _time<NEW_MAX_DAYS:
+                    _index = int(_time*params_lambda.shape[0]/MAX_DAYS)
+                    # if p_active[_index * (_index>=0)]<p_active_threshold_for_lambda or _frst_wave_passed:
+                    #     params[param_to_index['lambda']] = params_lambda[1]
+                    #     _frst_wave_passed = True
+                    # else:
+                    #     params[param_to_index['lambda']] = params_lambda[0]
+                    # best_params[param_to_index['lambda']] = best_params_lambda[_index if _index<best_params_lambda.shape[0] else best_params_lambda.shape[0]-1]
+                    best_params[param_to_index['lambda']] = best_params_lambda[1*(_time>LAMBDA_THRESHOLD) + 1*(_time>LAMBDA_THRESHOLD_2)]
+                        
+                    index = 0 + _time
                     
-                    evolve(best_params, fixed_params, best_states, p_active[0+_time * (_time>=0)])
+                    last_infected[:] = best_states[3]
                     
-                    # deaths[_time * (_time>=0) * (NEW_MAX_DAYS>_time),_range] += best_states[5,_range]*TOTAL_POPULATION * (_time<NEW_MAX_DAYS) * (_time>=0)
-                    deaths[__time, _range] += best_states[5,_range]*TOTAL_POPULATION
+                    evolve(best_params, fixed_params, best_states, p_active[0+index * (index>=0)])
+                    reproductive_number[_time] = (best_states[3] - last_infected)/(last_infected) / fixed_params[fixed_params_to_index['mu']]
+                    
+                    deaths[_time * (_time>=0) * (NEW_MAX_DAYS>_time),_range] += best_states[5,_range]*TOTAL_POPULATION * (_time<NEW_MAX_DAYS) * (_time>=0)
+                    # deaths[__time, _range] += best_states[5,_range]*TOTAL_POPULATION
                     recovered_array[_range] += best_states[6, _range] * (_time==113)
                     
                     _time += 1
-                    __time += 1
+                    # __time += 1
                     
+
                 fig_rec, ax_rec = plt.subplots()
                 ax_rec.hist(recovered_array.get()*100, 15)
                 ax_rec.set_title('Recovered % at May 15 2020')
                 ax_rec.set_ylabel('Relative frecuency')
                 ax_rec.set_xlabel('Recovered %')
-                filename_path = f'images/images_by_country/{COUNTRY}/'
-                os.makedirs(filename_path, exist_ok=True)
-                fig_rec.savefig(f'{filename_path}/recovered_histogram.png')
+                fig_rec.savefig(f'images/images_by_country/{COUNTRY}/recovered_histogram.png')
                 plt.close(fig_rec)
                     
                 deaths[0,:] = 0
@@ -136,27 +154,49 @@ if __name__=='__main__':
                 ax_.plot(time_list[:MAX_DAYS], deaths_list_smooth.get()[0:MAX_DAYS], color='black', label='smooth')
                 ax_.plot(time_list[MAX_DAYS:NEW_MAX_DAYS], deaths_list_smooth.get()[MAX_DAYS:NEW_MAX_DAYS], '-.', color='black')
                 
-                ax_.fill_between(time_list, _5p, _95p, alpha=0.2)
+                ax_.fill_between(time_list, _5p, _95p, alpha=0.3)
                 ax_.plot(time_list, _median, '-.', color='purple', label='median')
                 
-                ax_p_active = ax_.twinx()
-                ax_p_active.plot(time_list[:NEW_MAX_DAYS], p_active.get()[:NEW_MAX_DAYS], '-.', color='green', label='p_active google')
+                # ax_p_active = ax_.twinx()
+                # ax_p_active.plot(time_list[:NEW_MAX_DAYS], p_active.get()[:NEW_MAX_DAYS], '-.', color='green', label='p_active google')
                 # ax_p_active.plot(time_list[:NEW_MAX_DAYS]-6, p_active.get()[:NEW_MAX_DAYS], '-.', color='orange', label='p_active offset')
-                ax_p_active.set_ylabel('Movility reduction')
-                ax_p_active.legend(loc='upper center')
-                ax_p_active.set_ylim([0,1])
+                # ax_p_active.set_ylabel('Movility reduction')
+                # ax_p_active.legend(loc='center left')
+                # ax_p_active.set_ylim([0,1])
                 
                 ax_.set_xlabel('Days after 22 January 2020')
                 ax_.set_ylabel('Daily fatalities')
                 ax_.set_title('Fatalities per day')
                 
-                ax_.legend(loc='center left')
+                ax_.legend()
                 ax_.set_xlim(xmin=0)
                 ax_.set_ylim([0,max(deaths_list.get()[:NEW_MAX_DAYS])*1.1])
-                filename_path = f"images/images_by_country/{COUNTRY}/"
-                os.makedirs(filename_path, exist_ok=True)
-                fig_.savefig(f'{filename_path}/{execution}_bests.png')
+                fig_.savefig(f'images\images_by_country\{COUNTRY}\{execution}_bests.png')
                 plt.close(fig_)
+                
+                
+                
+                # R0
+                fig_reprod, ax_reprod = plt.subplots()
+                _5p = []
+                _95p = []
+                _median = []
+                time = 0
+                while time<NEW_MAX_DAYS:
+                    rp_ = reproductive_number[time, _range].copy()
+                    rp_.sort()
+                    _median.append(median(rp_).get())
+                    _5p.append(percentil(rp_, 5).get())
+                    _95p.append(percentil(rp_, 95).get())
+                    time+=1
+                
+                ax_reprod.fill_between(time_list[1:], _5p[1:], _95p[1:], alpha=0.3)
+                ax_reprod.plot(time_list[1:], _median[1:], '-.', color='purple', label='median')
+                
+                ax_reprod.set_ylabel('Reproductive number')
+                ax_reprod.set_xlabel('Days after 22 January 2020')
+                fig_reprod.savefig(f'images/images_by_country/{COUNTRY}/reproductive_number.png')
+                plt.close(fig_reprod)
                 
         
         # if VISUALIZE:

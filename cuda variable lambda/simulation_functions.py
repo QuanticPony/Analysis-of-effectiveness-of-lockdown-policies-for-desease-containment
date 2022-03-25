@@ -10,23 +10,10 @@ from evolution import *
 
 COUNTRY = 'Spain'
 MAX_DAYS = 140
-N = 34e6
+N = 47.5e6
 
-param_to_index = {
-    'permability' : 0,
-    'lambda' : 1,
-    'IFR' : 2,
-    'what' : 3,
-    'initial_i' : 4,
-    'mu' : 5,
-    'eta' : 6,
-}
-
-fixed_params_to_index = {
-    'home_size' : 0,
-    'k_average_active' : 1,
-    'k_average_confined' : 2,
-}
+LAMBDA_THRESHOLD = 45
+LAMBDA_THRESHOLD_2 = 60
 
 epi_poblation_to_index = {
     'sh' : 0,
@@ -126,7 +113,6 @@ def prepare_p_active_list(requested_country, first_day_deaths_list, lenght_death
     p_active_partial_db = aux[aux['sub_region_1'].isna()]
     del(aux)
     p_active = cp.ones(lenght_deaths_list, dtype=cp.float64)
-    last_not_p_empty = 1
     for day in range(lenght_deaths_list):
         p_value = p_active_partial_db[
             p_active_partial_db['date']==date_to_str(first_day_deaths_list+datetime.timedelta(day))
@@ -134,13 +120,8 @@ def prepare_p_active_list(requested_country, first_day_deaths_list, lenght_death
         if not p_value.empty:
         
             __p = float(p_value.values[0])
-            if __p < 0:  #! solución a valores positivos
+            if True:#__p < 0:  #! solución a valores positivos
                 p_active[day] += float(p_value.values[0]) * 0.01
-        else:
-            p_active[day] = last_not_p_empty
-        last_not_p_empty = p_active[day]
-        
-    p_active[lenght_deaths_list:] = p_active[lenght_deaths_list-1]
                 
     return p_active
 
@@ -165,33 +146,55 @@ def load_p_active(requested_country):
 
 
  
-def evolve_gpu(params, fixed_params, state, p_active, deaths_list, log_diff, max_days=MAX_DAYS, total_poblation=N):
+def evolve_gpu(params, fixed_params, state, p_active, deaths_list, log_diff, params_lambda=None, max_days=MAX_DAYS, total_poblation=N):
     
-    AJUSTE = 1
-    time = -1
+    deaths_ref = cp.zeros(params.shape[1])
     
-    while time<max_days:
-        time+=1
-        evolve(params, fixed_params, state, time, p_active)
+    # _time = cp.zeros(params.shape[1], dtype=cp.int32)
+    # _offset = cp.zeros(params.shape[1], dtype=cp.int32)
+    # _time[:] = params[param_to_index['initial_i']][:]
+    # _offset[:] = params[param_to_index['offset']][:]
+
+    LOG_SQUARE_THRESHOLD = 30
+    # p_active_threshold_for_lambda = 0.5
+    # _first_wave_passed = False
+    
+    __time_ref = 0
+    _time = 0
+
+    # while (_time<max_days).any():
+    while __time_ref<max_days:
+        index = 0 + _time
+        
+        if params_lambda is not None:
+            # params[param_to_index['lambda']] = params_lambda[int(__time_ref*params_lambda.shape[0]/max_days)]
+            params[param_to_index['lambda']] = params_lambda[1*(_time>LAMBDA_THRESHOLD) + 1*(_time>LAMBDA_THRESHOLD_2)]
+        # if p_active[index * (index>=0)]<p_active_threshold_for_lambda or _first_wave_passed:
+        #     params[param_to_index['lambda']] = params_lambda[1]
+        #     _first_wave_passed = True
+        # else:
+        #     params[param_to_index['lambda']] = params_lambda[0]
+            
+        evolve(params, fixed_params, state, p_active[index * (index>=0)])
         deaths = state[5]*total_poblation
         
-        if deaths_list[time]>0:
-            diff = deaths/deaths_list[time]
-        if deaths_list[time]<1:
-            diff = deaths + 1
-            
-
-        log_diff += cp.abs(cp.log(diff)) * ((diff<1)*AJUSTE + 1) 
-
-        continue
+        deaths_ref = 0 + deaths_list[_time * (_time>=0)] * (_time>=0)
+        # deaths_ref = 0 + deaths_list[__time_ref]
         
 
-        if deaths_list[time]>0:
-            diff = deaths/deaths_list[time]
-        if deaths_list[time]<1:
-            diff = deaths + 1
-            
-        log_diff += cp.log(diff) * (2/(1+cp.exp(AJUSTE*(1-diff)))+1)*AJUSTE
+        # diff = deaths - deaths_ref
+        # log_diff += 0.005*cp.square(diff) * (deaths_ref>=0) * (_time<max_days) * (deaths_ref>LOG_SQUARE_THRESHOLD)
+
+        diff = (deaths - deaths_ref)/(deaths + 1*(deaths==0))
+        log_diff += 200*cp.square(diff) * (deaths_ref>=0) * (_time<max_days) * (deaths_ref>LOG_SQUARE_THRESHOLD)
+
+
+        diff = deaths/(deaths_ref + 1 *(deaths_ref==0))# * (deaths_ref<0)
+        diff += 1 * (deaths_ref==0)
+        log_diff += cp.abs(cp.log(diff)) * (_time<max_days)  * (deaths_ref<=LOG_SQUARE_THRESHOLD)#* (1+ 1*(diff>1)) 
+        
+        _time+=1
+        __time_ref+=1
         continue
         
 def evolve_gpu_no_diff(params, fixed_params, state, p_active, max_days=MAX_DAYS):
@@ -211,7 +214,7 @@ def evolve_gpu_no_diff(params, fixed_params, state, p_active, max_days=MAX_DAYS)
 
 
 ## Seleccionar los 5% mejores
-def get_best_parameters(params, log_diff, save_percentage):
+def get_best_parameters(params, log_diff, save_percentage, params_lambdas=None):
     "Retuns the best `save_percentage`% `params` of the simulations given their `log_diff` with real data." 
     log_diff_index_sorted = cp.argsort(log_diff)
     # Para comprobar que indices tomar en el sort
@@ -220,19 +223,26 @@ def get_best_parameters(params, log_diff, save_percentage):
     save_count = ceil(log_diff.size*save_percentage*0.01)
     # save_count = 6
 
-    saved_params = cp.zeros((7,save_count), dtype=cp.float64)
+    saved_params = cp.zeros((len(param_to_index),save_count), dtype=cp.float64)
     saved_log_diff = cp.zeros(save_count, dtype=cp.float64)
+    if params_lambdas is not None:
+        saved_params_lambdas = cp.zeros((params_lambdas.shape[0], save_count), dtype=cp.float64)
 
     for i in range(save_count):
         saved_params[:,i] = params[:,log_diff_index_sorted[i]]
         saved_log_diff[i] = log_diff[log_diff_index_sorted[i]]
+        if params_lambdas is not None:
+            saved_params_lambdas[:,i] = params_lambdas[:,log_diff_index_sorted[i]]
+
+    if params_lambdas is not None:
+        return saved_params, saved_log_diff, saved_params_lambdas
     return saved_params, saved_log_diff
 
-def prepare_states(params):
+def prepare_states(params, total_population):
     "Creates and returns `state` from given `params`"
     state = cp.zeros((7,params.shape[1]), dtype=cp.float64)
-    state[1] = 1-params[4]
-    state[3] = params[4]
+    state[1] = 1-params[param_to_index['initial_i']]
+    state[3] = params[param_to_index['initial_i']]
     return state
 
 
@@ -240,19 +250,24 @@ def prepare_states(params):
 def plot_states(params, fixed_params, state, deaths_list, p_active, max_days=MAX_DAYS, total_population=N):
     fig, ax = plt.subplots()
     
-    time_list =  range(len(deaths_list)+1)
+    time_list =  range(9, len(deaths_list))
     
+    time = params[param_to_index['initial_i']]-1
+    for i, t in enumerate(time):
+        while t < 10-1:
+            t+=1
+            evolve(params[:,i], fixed_params, state[:,i], 1)
+    time = 10-1
     
-    time = 0
     while time < max_days:
-        evolve(params, fixed_params, state, time, p_active)
-
-        ax.plot([time for i in range(params.shape[1])], state[5].get()*N, ',', color='black')
+        time+=1
+        evolve(params, fixed_params, state, p_active[time])
+        ax.plot([time for i in range(params.shape[1])], state[5].get()*total_population, ',', color='black')
         # colors = ['purple', 'green', 'blue', 'orange', 'red', 'black', 'pink']
         # for i in range(state.shape[0]):
         #     ax.plot([time for _ in range(state.shape[1])], state[i,:].get()*total_population, '.', color=colors[i])
 
-        time+=1
+        
 
     ax.plot(time_list[:max_days], deaths_list.get()[:max_days], color='red', label='real data')
     ax.set_title('Deaths per day')
@@ -266,6 +281,18 @@ def plot_states(params, fixed_params, state, deaths_list, p_active, max_days=MAX
 
 
 
+def median(array):
+    return percentil(array, 50)
+    
+def percentil(array, i):
+    index = array.size * i / 100
+    decimal, complete = np.modf(index)
+    complete = int(complete)
+    if decimal==0:
+        return array[complete+1]
+    return (array[complete] + array[complete+1])/2
+
+
 def plot_percentiles(params, fixed_params, state, deaths_list, p_active, max_days=MAX_DAYS, total_population=N):
     fig, ax = plt.subplots()
     
@@ -273,24 +300,26 @@ def plot_percentiles(params, fixed_params, state, deaths_list, p_active, max_day
     
     time = 0
     
-    deaths = np.zeros((len(deaths_list)+1,3))
+    deaths_plotted = np.zeros((len(deaths_list)+1,3))
+
     
     while time < max_days:
         evolve(params, fixed_params, state, time, p_active)
-        deaths[time] = state[5].get()*N
+        copy_deaths = (state[5].get()*N).copy()
+        copy_deaths.sort()
+        percentil(copy_deaths, 5)
         time+=1
         
-    ax.plot(time_list[:max_days], deaths[:,0][:max_days], '-.', color='red', label='percentil 5')
-    ax.plot(time_list[:max_days], deaths[:,1][:max_days], '-.', color='orange', label='median')
-    ax.plot(time_list[:max_days], deaths[:,2][:max_days], '-.', color='yellow', label='percentil 95')
-    ax.fill_between(time_list[:max_days], deaths[:,0][:max_days], deaths[:,2][:max_days], alpha=0.2)
+    ax.plot(time_list[:max_days], deaths_plotted[:,0][:max_days], '-.', color='red', label='percentil 5')
+    ax.plot(time_list[:max_days], deaths_plotted[:,1][:max_days], '-.', color='orange', label='median')
+    ax.plot(time_list[:max_days], deaths_plotted[:,2][:max_days], '-.', color='yellow', label='percentil 95')
+    ax.fill_between(time_list[:max_days], deaths_plotted[:,0][:max_days], deaths_plotted[:,2][:max_days], alpha=0.2)
 
     ax.plot(time_list[:max_days], deaths_list.get()[:max_days], color='black', label='real data')
     ax.set_title('Deaths per day')
     ax.legend()
     ax.set_ylim(0, max(deaths_list.get()[:max_days]))
     return fig, ax
-
 
 
 
@@ -327,8 +356,7 @@ class Simulation:
         self.max_days = max_days
         self.total_population = total_population
         
-        self.state = np.zeros(7, dtype=np.float64)
-        self.parameters = np.zeros(5, dtype=np.float64)
+        self.parameters = np.zeros(len(param_to_index), dtype=np.float64)
         
         self.p_active = p_active
         self.deaths_list = deaths_list
@@ -337,34 +365,39 @@ class Simulation:
         
     def plot(self):
         for p, s in self.sliders.items():
-            self.parameters[param_to_index[p]] = s.value
+            try:
+                self.parameters[param_to_index[p]] = s.value
+            except KeyError:
+                self.fixed_params[fixed_params_to_index[p]] = s.value
         
         self.state = np.zeros(7, dtype=np.float64) 
-        self.state[1] = 1-self.parameters[4]
-        self.state[3] = self.parameters[4]
+        self.state[1] = 1- 1/self.total_population
+        self.state[3] = 1/self.total_population
         
         time_list =  range(len(self.deaths_list)+1)
         self.ax.plot(time_list[:self.max_days], smooth_deaths_list(self.deaths_list[:self.max_days]).get() , label='smooth data')
         self.ax.plot(time_list[:self.max_days], self.deaths_list[:self.max_days], label='real data')
         
-        time = -1
+        time = -1 + self.parameters[param_to_index['initial_i']]
         deaths_list = np.zeros(self.max_days)
         log_diff = 0
-        while time < self.max_days-1:
-            time+=1
-            evolve(self.parameters, self.fixed_params, self.state, time, self.p_active)
+        actual_time = -1
+        while actual_time < self.max_days-1:
+            p_active = self.p_active[int(time) if time >= 0 else 0] 
+            deaths_ref = self.deaths_list[int(time) if time >= 0 else 0] 
+            
+            time += 1
+            actual_time  += 1
+            evolve(self.parameters, self.fixed_params, self.state, p_active)
 
-            deaths_list[time] = self.state[5]*self.total_population
+            deaths_list[actual_time] = self.state[5]*self.total_population
   
-            # log_diff += np.abs(deaths_list[time]/(self.deaths_list[time]+0.0001)-1)
-            if self.deaths_list[time]>0:
-                diff = deaths_list[time]/self.deaths_list[time]
-                log_diff += cp.abs(cp.log(diff))
-                continue
-            if self.deaths_list[time]<1:
-                diff = deaths_list[time] + 1
-                log_diff += cp.abs(cp.log(diff))
-                continue
+            diff = deaths_list[actual_time] - deaths_ref
+            log_diff += 0.0001*cp.square(diff) * (deaths_ref>=200) * (time<self.max_days)
+
+            diff = deaths_list[actual_time]/(deaths_ref + 1 *(deaths_ref==0)) * (deaths_ref<200)
+            diff += 1 * (diff==0)
+            log_diff += cp.abs(cp.log(diff)) * (time<self.max_days)
             
             
         self.ax.plot(time_list[:self.max_days], deaths_list, '-', color='black', label=f'{log_diff}')

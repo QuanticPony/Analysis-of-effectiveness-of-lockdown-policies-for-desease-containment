@@ -18,9 +18,12 @@ def correlations(params, n_bins, log_diff, country):
     from matplotlib.ticker import NullFormatter
     
     for i_n, i in param_to_index.items():
+        if 'lambda'==i_n:
+            continue
         for j_n, j in param_to_index.items():
+            if 'lambda'==j_n:
+                continue
             if i < j:
-                
                 try:
                     x = params[i,:].get()
                     y = params[j,:].get()
@@ -94,6 +97,7 @@ def plot_the_plots(country=COUNTRY, max_days=MAX_DAYS):
     for k,v in param_to_index.items():
         files.update({k: open(f"generated_data\data_by_country\{country}\{k}.dat", mode)})
     files.update({'log_diff': open(f"generated_data\data_by_country\{country}\log_diff.dat", mode)})
+    files.update({'lambdas': open(f"generated_data\data_by_country\{country}\lambdas.dat", mode)})
         
         
     lenf = sum(1 for _ in files['IFR'])
@@ -101,9 +105,25 @@ def plot_the_plots(country=COUNTRY, max_days=MAX_DAYS):
     log_diff = np.zeros(lenf)
     files['IFR'].seek(0)
     
-    for k, v in param_to_index.items():
+    params_lambdas = []
+    
+    for k, v in files.items():
+        if k=='lambda':
+            continue
+        if k=='log_diff':
+            continue
+        if k=='lambdas':
+            _values = files[k].readline()
+            n_lambdas = len(_values.split())
+            params_lambdas = np.zeros((n_lambdas, lenf))
+            files[k].seek(0)
+            for i, value in enumerate(files[k]):
+                for j, v in enumerate(value.split()):
+                    params_lambdas[j,i] = np.float64(v)
+            continue
         for i, value in enumerate(files[k]):
             params[param_to_index[k], i] = np.float64(value)
+            
     for i,value in enumerate(files['log_diff']):
         log_diff[i] = 1/np.float64(value)
             
@@ -111,6 +131,27 @@ def plot_the_plots(country=COUNTRY, max_days=MAX_DAYS):
                 
     for k,f in files.items():
         if k=='log_diff':
+            continue
+        if k=='lambda':
+            continue
+        if k=='lambdas':
+            fig, *ax = plt.subplots(nrows=params_lambdas.shape[0], sharex=True)
+            for i, lamb in enumerate(params_lambdas):
+                k_array = lamb.copy()
+                k_array.sort()
+                k_array_median = median(k_array)
+                k_array_percentil_5 = percentil(k_array, 5)
+                k_array_percentil_95 = percentil(k_array, 95)
+                
+                ax[0][i].hist(k_array, 25, density=True, weights=log_diff)
+                y_min, y_max = ax[0][i].get_ylim()
+                ax[0][i].vlines(k_array_median, ymin=y_min, ymax=y_max, label='Median', color='orange')
+                ax[0][i].vlines(k_array_percentil_5, ymin=y_min, ymax=y_max, label='Percentile 5', color='red')
+                ax[0][i].vlines(k_array_percentil_95, ymin=y_min, ymax=y_max, label='Percentile 95', color='purple')
+                ax[0][i].set_ylabel('Relative frecuency')
+                ax[0][i].set_xlabel(f"lambda {i}")
+                
+            fig.savefig(f'images\images_by_country\{country}\lambdas_histogram.png')
             continue
         fig, ax = plt.subplots()
         
@@ -122,11 +163,11 @@ def plot_the_plots(country=COUNTRY, max_days=MAX_DAYS):
         k_array_percentil_5 = percentil(k_array, 5)
         k_array_percentil_95 = percentil(k_array, 95)
         
-        if k=='first_i':
+        if k in ['offset']:
             k_array = list(map(int, k_array))
             ax.hist(k_array, np.arange(min(k_array)-0.5, max(k_array)+0.5), density=True, align='mid', weights=log_diff)
         else:
-            ax.hist(k_array, 20, density=True, weights=log_diff)
+            ax.hist(k_array, 25, density=True, weights=log_diff)
         
         
         y_min, y_max = ax.get_ylim()
@@ -137,9 +178,9 @@ def plot_the_plots(country=COUNTRY, max_days=MAX_DAYS):
         
         ax.set_xlabel(f"{k}")
         ax.set_title(k.capitalize())
-        if k=='lambda':
-            ax.set_xlabel(r"$\lambda$")
-            ax.set_title(r"$\lambda$")
+        # if k=='lambda':
+        #     ax.set_xlabel(r"$\lambda$")
+        #     ax.set_title(r"$\lambda$")
         if k=='permability':
             ax.set_xlabel(r"$\phi$")
             ax.set_title(r"$\phi$")
@@ -160,6 +201,6 @@ def plot_the_plots(country=COUNTRY, max_days=MAX_DAYS):
         
 if __name__=='__main__':
     
-    COUNTRY = 'Colombia'
+    COUNTRY = 'Spain'
     MAX_DAYS = 60
     plot_the_plots(COUNTRY, MAX_DAYS)

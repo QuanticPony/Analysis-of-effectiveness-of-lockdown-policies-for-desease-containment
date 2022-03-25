@@ -25,7 +25,6 @@ def evolve(params, fixed_params, state, p_active):
     p_infection_active, p_infection_confined = P_infection(params, fixed_params, state, p_active)
     
     eta = fixed_params[fixed_params_to_index['eta']]
-    # eta = params[param_to_index['eta']]
     mu = fixed_params[fixed_params_to_index['mu']]
 
     S = state[0] + state[1]

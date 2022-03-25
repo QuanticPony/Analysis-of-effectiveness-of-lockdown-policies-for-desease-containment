@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from simulation_functions import *
 
 if __name__=='__main__':
-    COUNTRY = 'United Kingdom of Great Britain'
+    COUNTRY = 'France'
     
     (deaths_list, first_deaths_list_day, deaths_list_lenght) =  prepare_deaths_list(COUNTRY)
     
@@ -15,7 +15,7 @@ if __name__=='__main__':
     f1, a1 = plot_deaths(deaths_list)
     f2, a2 = plot_p_active(p_active)
     
-    # save_deaths_list(COUNTRY, deaths_list)
+    save_deaths_list(COUNTRY, deaths_list)
     save_p_active(COUNTRY, p_active)
     
     plt.show()

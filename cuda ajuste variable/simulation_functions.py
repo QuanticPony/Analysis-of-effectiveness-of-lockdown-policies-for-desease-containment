@@ -145,13 +145,13 @@ def load_p_active(requested_country):
  
 def evolve_gpu(params, fixed_params, state, p_active, deaths_list, log_diff, max_days=MAX_DAYS, total_poblation=N):
 
-    time = params[param_to_index['first_i']]
+    # time = params[param_to_index['first_i']]
     deaths_ref = cp.zeros(params.shape[1])
-    _time = cp.zeros(len(time), dtype=cp.int32)
-    _time[:] = time[:]
+    _time = cp.zeros(params.shape[1], dtype=cp.int32)
+    # _time[:] = time[:]
     max_deaths_ref = max(deaths_list)
 
-    LOG_SQUARE_THRESHOLD = 600
+    LOG_SQUARE_THRESHOLD = 300
     
     __time_ref = 0
 
@@ -165,8 +165,8 @@ def evolve_gpu(params, fixed_params, state, p_active, deaths_list, log_diff, max
         deaths_ref = 0 + deaths_list[__time_ref]
         
 
-        diff = deaths - deaths_ref
-        log_diff += 0.001*cp.square(diff) * (deaths_ref>=0) * (_time<max_days) * (deaths_ref>LOG_SQUARE_THRESHOLD)
+        diff = (deaths - deaths_ref)/(deaths + 1*(deaths==0))
+        log_diff += 200*cp.square(diff) * (deaths_ref>=0) * (_time<max_days) * (deaths_ref>LOG_SQUARE_THRESHOLD)
 
 
         diff = deaths/(deaths_ref + 1 *(deaths_ref==0))# * (deaths_ref<0)
@@ -214,8 +214,8 @@ def get_best_parameters(params, log_diff, save_percentage):
 def prepare_states(params, total_population):
     "Creates and returns `state` from given `params`"
     state = cp.zeros((7,params.shape[1]), dtype=cp.float64)
-    state[1] = 1-1/total_population
-    state[3] = 1/total_population
+    state[1] = 1-params[param_to_index['initial_i']]
+    state[3] = params[param_to_index['initial_i']]
     return state
 
 
