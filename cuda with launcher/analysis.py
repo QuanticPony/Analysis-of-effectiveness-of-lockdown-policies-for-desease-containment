@@ -87,7 +87,7 @@ def correlations(params, n_bins, log_diff, country):
                 plt.close(fig)
 
 
-def plot_the_plots(country=COUNTRY, max_days=MAX_DAYS):
+def plot_the_plots(country, max_days):
         
     files = {}
     mode = 'r'
@@ -108,6 +108,8 @@ def plot_the_plots(country=COUNTRY, max_days=MAX_DAYS):
         log_diff[i] = 1/np.float64(value)
             
     correlations(params, 20, log_diff, country)
+
+    percentiles = {}
                 
     for k,f in files.items():
         if k=='log_diff':
@@ -121,6 +123,12 @@ def plot_the_plots(country=COUNTRY, max_days=MAX_DAYS):
         k_array_median = median(k_array)
         k_array_percentil_5 = percentil(k_array, 5)
         k_array_percentil_95 = percentil(k_array, 95)
+        dist = k_array_percentil_95 - k_array_percentil_5
+        percentiles.update({
+            k:{
+                "min" : k_array_percentil_5,
+                "max" : k_array_percentil_95
+            }})
         
         if k=='first_i':
             k_array = list(map(int, k_array))
@@ -153,7 +161,9 @@ def plot_the_plots(country=COUNTRY, max_days=MAX_DAYS):
         
         
         fig.savefig(f'images\images_by_country\{country}\{k}_histogram.png')
+        plt.close(fig)
         # plt.show()
+    return percentiles
         
         
         

@@ -1,0 +1,38 @@
+{
+    "country": "United Kingdom of Great Britain",
+    "total_population": 68.5e6,
+    "max_days": 100,
+    "simulation": {
+        "n_simulations": 1000000,
+        "n_executions": 1
+    },
+    "params": {
+        "permeability": {
+            "min": 0,
+            "max": 0.3
+        },
+        "lambda": {
+            "min": 0.06,
+            "max": 0.13
+        },
+        "IFR": {
+            "min": 0.008,
+            "max": 0.012
+        },
+        "what": {
+            "min": 0.0625,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 0,
+            "max": 1.47058824e-6
+        }
+    },
+    "fixed_params": {
+        "home_size": 2.5,
+        "k_average_active": 9.475115167626232,
+        "k_average_confined": 2.245642660835696,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923
+    }
+}

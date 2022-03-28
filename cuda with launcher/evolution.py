@@ -1,8 +1,6 @@
 import cupy as cp
-import cupy.random as cprand
-import cupy.cuda as cuda
 
-from set_parameters import *
+from parameters_control import param_to_index, fixed_params_to_index
     
 def P_home_is_secure(params, fixed_params, state):
     'pow((1 - i), sigma - 1)'
@@ -24,8 +22,8 @@ def evolve(params, fixed_params, state, p_active):
     p_home_is_secure = P_home_is_secure(params, fixed_params, state)
     p_infection_active, p_infection_confined = P_infection(params, fixed_params, state, p_active)
     
-    eta = fixed_params[fixed_params_to_index['eta']]
-    # eta = params[param_to_index['eta']]
+    # eta = fixed_params[fixed_params_to_index['eta']]
+    eta = params[param_to_index['eta']]
     mu = fixed_params[fixed_params_to_index['mu']]
 
     S = state[0] + state[1]
