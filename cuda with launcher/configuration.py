@@ -152,6 +152,7 @@ def generate_configuration(country: str, *, data_location='real_data'):
         },
 
         "params" : {
+            "offset" : {"min": -10, "max" : 10},
             "permeability" : {"min" : 0, "max" : 0.2},
             "lambda" : {"min" : 0.06, "max" : 0.16},
             "IFR" : {"min" : 0.008, "max" : 0.012},

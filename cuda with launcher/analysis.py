@@ -63,13 +63,13 @@ def correlations(params, n_bins, log_diff, country):
                 axScatter.set_xlim((xymin[0], xymax[0]))
                 axScatter.set_ylim((xymin[1], xymax[1]))
                 
-                if i not in []:
+                if i not in [param_to_index['offset']]:
                     xbins = np.linspace(xymin[0], xymax[0], n_bins)
                 else:
                     n_bins = int(xymax[0] - xymin[0]) +1 
                     xbins = np.arange(int(xymin[0])-0.5, int(xymax[0])+0.5)
                     
-                if j not in []:
+                if j not in [param_to_index['offset']]:
                     ybins = np.linspace(xymin[1], xymax[1], n_bins)
                 else:
                     n_bins = int(xymax[1] - xymin[1]) +1 
@@ -112,8 +112,8 @@ def plot_the_plots(country, max_days):
     percentiles = {}
                 
     for k,f in files.items():
-        if k=='log_diff':
-            continue
+        # if k=='log_diff':
+        #     continue
         fig, ax = plt.subplots()
         
         k_array = params[param_to_index[k]].copy()
@@ -123,14 +123,14 @@ def plot_the_plots(country, max_days):
         k_array_median = median(k_array)
         k_array_percentil_5 = percentil(k_array, 5)
         k_array_percentil_95 = percentil(k_array, 95)
-        dist = k_array_percentil_95 - k_array_percentil_5
-        percentiles.update({
-            k:{
-                "min" : k_array_percentil_5,
-                "max" : k_array_percentil_95
-            }})
+        if k!='log_diff':
+            percentiles.update({
+                k:{
+                    "min" : k_array_percentil_5,
+                    "max" : k_array_percentil_95
+                }})
         
-        if k=='first_i':
+        if k in [param_to_index['offset']]:
             k_array = list(map(int, k_array))
             ax.hist(k_array, np.arange(min(k_array)-0.5, max(k_array)+0.5), density=True, align='mid', weights=log_diff)
         else:
@@ -145,20 +145,20 @@ def plot_the_plots(country, max_days):
         
         ax.set_xlabel(f"{k}")
         ax.set_title(k.capitalize())
-        if k=='lambda':
-            ax.set_xlabel(r"$\lambda$")
-            ax.set_title(r"$\lambda$")
-        if k=='permability':
-            ax.set_xlabel(r"$\phi$")
-            ax.set_title(r"$\phi$")
-        if k=='initial_i':
-            ax.set_xlabel(r"$\rho_I$")
-            ax.set_title(r"$\rho_I$")
-        if k=='what':
-            ax.set_xlabel(r"$\xi$")
-            ax.set_title(r"$\xi$")
-        ax.legend()
+
+        label = {
+            'lambda' :  r"$\lambda$",
+            'permability' : r"$\phi$",
+            'initial_i' : r"$\rho_I$",
+            'what' : r"$\xi$",
+            'offset' : r"$offset$",
+            'IFR' : r"$IFR$"
+        }[k]
+
+        ax.set_xlabel(label)
+        ax.set_title(label)
         
+        ax.legend()
         
         fig.savefig(f'images\images_by_country\{country}\{k}_histogram.png')
         plt.close(fig)

@@ -7,6 +7,10 @@
         "n_executions": 1
     },
     "params": {
+        "offset" : {
+            "min": -10, 
+            "max" : 10
+        },
         "permeability": {
             "min": 0,
             "max": 1

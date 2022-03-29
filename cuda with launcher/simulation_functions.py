@@ -25,24 +25,24 @@ def evolve_gpu(params, fixed_params, state, p_active, deaths_list, log_diff, con
     total_population = configuration["total_population"]
     max_days = configuration["max_days"]
 
-    # time = params[param_to_index['first_i']]
+    time = params[param_to_index['offset']]
     deaths_ref = cp.zeros(params.shape[1])
     _time = cp.zeros(params.shape[1], dtype=cp.int32)
-    # _time[:] = time[:]
-    max_deaths_ref = max(deaths_list)
+    _time[:] = time[:]
+    # max_deaths_ref = max(deaths_list)
 
-    LOG_SQUARE_THRESHOLD = 300
+    LOG_SQUARE_THRESHOLD = 10000
     
     __time_ref = 0
 
-    # while (_time<max_days).any():
-    while __time_ref<max_days:
+    while (_time<max_days).any():
+    # while __time_ref<max_days:
         
-        evolve(params, fixed_params, state, p_active[_time * (_time>=0)])
+        evolve(params, fixed_params, state, p_active[__time_ref])
         deaths = state[5]*total_population
         
-        # deaths_ref = 0 + deaths_list[_time * (_time>=0)] * (_time>=0)
-        deaths_ref = 0 + deaths_list[__time_ref]
+        deaths_ref = 0 + deaths_list[_time * (_time>=0)] #TODO: mirar si esto hace falta * (_time>=0)
+        # deaths_ref = 0 + deaths_list[__time_ref]
         
 
         ## ABS
@@ -51,8 +51,8 @@ def evolve_gpu(params, fixed_params, state, p_active, deaths_list, log_diff, con
         #     )
 
         ## SQUEARE
-        diff = (deaths - deaths_ref)/(deaths + 1*(deaths==0))
-        log_diff += 10*cp.square(diff) * (deaths_ref>=0) * (_time<max_days) * (deaths_ref>LOG_SQUARE_THRESHOLD)
+        # diff = (deaths - deaths_ref)/(deaths + 1*(deaths==0))
+        # log_diff += 10*cp.square(diff) * (deaths_ref>=0) * (_time<max_days) * (deaths_ref>LOG_SQUARE_THRESHOLD)
 
         ## LOG
         diff = deaths/(deaths_ref + 1 *(deaths_ref==0))# * (deaths_ref<0)
@@ -61,7 +61,6 @@ def evolve_gpu(params, fixed_params, state, p_active, deaths_list, log_diff, con
         
         _time+=1
         __time_ref+=1
-        continue
         
 def evolve_gpu_no_diff(params, fixed_params, state, p_active, max_days=1):
     time = 0
