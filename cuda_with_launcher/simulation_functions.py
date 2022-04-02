@@ -30,8 +30,6 @@ def evolve_gpu(params, fixed_params, state, p_active, deaths_list, log_diff, con
     _time = cp.zeros(params.shape[1], dtype=cp.int32)
     _time[:] = time[:]
     # max_deaths_ref = max(deaths_list)
-
-    LOG_SQUARE_THRESHOLD = 10000
     
     __time_ref = 0
 
@@ -44,20 +42,8 @@ def evolve_gpu(params, fixed_params, state, p_active, deaths_list, log_diff, con
         deaths_ref = 0 + deaths_list[_time * (_time>=0)] #TODO: mirar si esto hace falta * (_time>=0)
         # deaths_ref = 0 + deaths_list[__time_ref]
         
-
-        ## ABS
-        # log_diff +=  cp.abs(
-        #         (deaths-deaths_ref)/((deaths + 1*(deaths==0) -deaths_ref)*(deaths>deaths_ref) + deaths_ref + 1*(deaths_ref==0)) 
-        #     )
-
-        ## SQUEARE
-        # diff = (deaths - deaths_ref)/(deaths + 1*(deaths==0))
-        # log_diff += 10*cp.square(diff) * (deaths_ref>=0) * (_time<max_days) * (deaths_ref>LOG_SQUARE_THRESHOLD)
-
-        ## LOG
-        diff = deaths/(deaths_ref + 1 *(deaths_ref==0))# * (deaths_ref<0)
-        diff += 1 * (deaths_ref==0)
-        log_diff += cp.abs(cp.log(diff)) * (_time<max_days)  * (deaths_ref<=LOG_SQUARE_THRESHOLD)#* (1+ 1*(diff>1)) 
+        diff = cp.abs(deaths-deaths_ref)
+        log_diff += (cp.abs(cp.log(diff+1)) + 0.001*cp.square(diff)) * (_time<max_days)
         
         _time+=1
         __time_ref+=1

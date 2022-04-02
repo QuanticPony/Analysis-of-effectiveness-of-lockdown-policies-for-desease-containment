@@ -8,3 +8,4 @@ real_data/*
 *.png
 *.dat
 pruebas.py
+configurations/*

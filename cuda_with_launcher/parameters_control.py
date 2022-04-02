@@ -8,7 +8,7 @@ param_to_index = {
     'what' : 3,
     'initial_i' : 4,
     # 'mu' : 5,
-    'eta' : 5,
+    'offset' : 5,
 }
 
 fixed_params_to_index = {
@@ -16,7 +16,7 @@ fixed_params_to_index = {
     'k_average_active' : 1,
     'k_average_confined' : 2,
     'mu' : 3,
-    # 'eta' : 4,
+    'eta' : 4,
 }
 
 class Params_Manager:
@@ -30,8 +30,9 @@ class Params_Manager:
             if param_index is not None:
                 counter += 1
                 if param_name == 'offset':
-                        params[param_index] = cprand.randint(param_range["min"], param_range["max"]+1, self.configuration["simulation"]["n_simulations"], dtype=cp.int32)
-                params[param_index] = cprand.random(self.configuration["simulation"]["n_simulations"], dtype=cp.float64) * (param_range["max"] - param_range["min"]) + param_range["min"]
+                    params[param_index] = cprand.randint(param_range["min"], param_range["max"]+1, self.configuration["simulation"]["n_simulations"], dtype=cp.int32)
+                else:
+                    params[param_index] = cprand.random(self.configuration["simulation"]["n_simulations"], dtype=cp.float64) * (param_range["max"] - param_range["min"]) + param_range["min"]
 
         if counter < len(param_to_index.keys()):
             raise Exception("params array could not be completed with current options.")

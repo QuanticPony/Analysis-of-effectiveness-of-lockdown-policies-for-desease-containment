@@ -66,14 +66,14 @@ def correlations(params, n_bins, log_diff, country):
                 if i not in [param_to_index['offset']]:
                     xbins = np.linspace(xymin[0], xymax[0], n_bins)
                 else:
-                    n_bins = int(xymax[0] - xymin[0]) +1 
+                    n_bins_ = int(xymax[0] - xymin[0]) +1 
                     xbins = np.arange(int(xymin[0])-0.5, int(xymax[0])+0.5)
                     
                 if j not in [param_to_index['offset']]:
                     ybins = np.linspace(xymin[1], xymax[1], n_bins)
                 else:
-                    n_bins = int(xymax[1] - xymin[1]) +1 
-                    xbins = np.linspace(xymin[0], xymax[0], n_bins)
+                    n_bins_ = int(xymax[1] - xymin[1]) +1 
+                    xbins = np.linspace(xymin[0], xymax[0], n_bins_)
                     ybins = np.arange(int(xymin[1])-0.5, int(xymax[1])+0.5)
                 
                 axScatter.hist2d(x, y, bins=[xbins, ybins], weights=log_diff)
@@ -87,7 +87,7 @@ def correlations(params, n_bins, log_diff, country):
                 plt.close(fig)
 
 
-def plot_the_plots(country, max_days):
+def plot_the_plots(country, max_days, *, save_pictures=True):
         
     files = {}
     mode = 'r'
@@ -107,16 +107,20 @@ def plot_the_plots(country, max_days):
     for i,value in enumerate(files['log_diff']):
         log_diff[i] = 1/np.float64(value)
             
-    correlations(params, 20, log_diff, country)
+    if save_pictures:
+        correlations(params, 30, log_diff, country)
 
     percentiles = {}
                 
     for k,f in files.items():
         # if k=='log_diff':
         #     continue
-        fig, ax = plt.subplots()
         
-        k_array = params[param_to_index[k]].copy()
+        
+        if k!='log_diff':
+            k_array = params[param_to_index[k]].copy()
+        else:
+            k_array = 1/log_diff.copy()
             
         k_array.sort()
             
@@ -130,11 +134,18 @@ def plot_the_plots(country, max_days):
                     "max" : k_array_percentil_95
                 }})
         
-        if k in [param_to_index['offset']]:
+        if not save_pictures:
+            continue
+        fig, ax = plt.subplots()
+        
+        if k == 'offset':
             k_array = list(map(int, k_array))
-            ax.hist(k_array, np.arange(min(k_array)-0.5, max(k_array)+0.5), density=True, align='mid', weights=log_diff)
+            ax.hist(k_array, np.arange(min(k_array)-0.5, max(k_array)+0.5, 1), density=True, align='mid', weights=log_diff)
         else:
-            ax.hist(k_array, 20, density=True, weights=log_diff)
+            if k!='log_diff':
+                ax.hist(k_array, 20, density=True, weights=log_diff)
+            else:
+                ax.hist(k_array, 20, density=True)
         
         
         y_min, y_max = ax.get_ylim()
@@ -148,12 +159,16 @@ def plot_the_plots(country, max_days):
 
         label = {
             'lambda' :  r"$\lambda$",
-            'permability' : r"$\phi$",
+            'permeability' : r"$\phi$",
             'initial_i' : r"$\rho_I$",
             'what' : r"$\xi$",
             'offset' : r"$offset$",
-            'IFR' : r"$IFR$"
+            'IFR' : r"$IFR$",
+            'log_diff' : r"Distance to objective function"
         }[k]
+        
+        # if k=='initial_i':
+        #     ax.set_xscale('log')
 
         ax.set_xlabel(label)
         ax.set_title(label)
@@ -170,6 +185,6 @@ def plot_the_plots(country, max_days):
         
 if __name__=='__main__':
     
-    COUNTRY = 'Colombia'
+    COUNTRY = 'Italy'
     MAX_DAYS = 60
     plot_the_plots(COUNTRY, MAX_DAYS)

@@ -129,12 +129,13 @@ def prepare_deaths_p_active(country: str, plot=False):
                           using='retail_and_recreation_percent_change_from_baseline')
     
     if plot:
-        from simulation_functions import plot_deaths, plot_p_active
         f1, a1 = plot_deaths(deaths_list)
         f2, a2 = plot_p_active(p_active)
+        plt.show()
     
     save_deaths_list(country, deaths_list)
     save_p_active(country, p_active)
+    return first_deaths_list_day
 
 
 def generate_configuration(country: str, *, data_location='real_data'):
@@ -152,12 +153,12 @@ def generate_configuration(country: str, *, data_location='real_data'):
         },
 
         "params" : {
-            "offset" : {"min": -10, "max" : 10},
-            "permeability" : {"min" : 0, "max" : 0.2},
-            "lambda" : {"min" : 0.06, "max" : 0.16},
+            "offset" : {"min": -20, "max" : 20},
+            "permeability" : {"min" : 0, "max" : 1},
+            "lambda" : {"min" : 0.05, "max" : 0.16},
             "IFR" : {"min" : 0.008, "max" : 0.012},
             "what" : {"min" : 1/16, "max" : 1/6},
-            "initial_i" : {"min" : 0, "max" : 1e-8},
+            "initial_i" : {"min" : 0, "max" : 1e-6},
         },
 
         "fixed_params" : {
@@ -183,7 +184,9 @@ def read_configuration(country: str, print_config=False):
             if print_config:
                 print(conf)
     except Exception as e:
+        prepare_deaths_p_active(country, plot=True)
         generate_configuration(country)
+        exit()
         return read_configuration(country, print_config=print_config)
     return conf
 

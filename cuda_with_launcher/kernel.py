@@ -5,7 +5,7 @@ from plots_funtions import *
 from analysis import *
 
 
-def main(configuration, save_data: bool, analyze_data: bool, erase_prev_data: bool, save_percentage: float, name=""):
+def main(configuration, save_data: bool, analyze_data: bool, erase_prev_data: bool, save_percentage: float, name="", save_pictures=False):
 
     ## Leer configuracion y abrir ficheros de guardado de datos
     country = configuration["country"]
@@ -64,4 +64,4 @@ def main(configuration, save_data: bool, analyze_data: bool, erase_prev_data: bo
 
     ## Histogramas y correlaciones
     if analyze_data:
-        return plot_the_plots(country, configuration["max_days"])
+        return plot_the_plots(country, configuration["max_days"], save_pictures=save_pictures)
