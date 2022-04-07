@@ -3,9 +3,10 @@
 .vscode/
 build/
 real_data/*
+real_data/data_by_country/*
+generated_data/*
 */__pycache__/*
 *.real_data
 *.png
 *.dat
 pruebas.py
-configurations/*

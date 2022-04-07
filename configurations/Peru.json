@@ -1,0 +1,42 @@
+{
+    "country": "Peru",
+    "total_population": 32971.854,
+    "max_days": 110,
+    "simulation": {
+        "n_simulations": 1000000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": -20,
+            "max": 20
+        },
+        "permeability": {
+            "min": 0,
+            "max": 1
+        },
+        "lambda": {
+            "min": 0.05,
+            "max": 0.3
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.0625,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 0,
+            "max": 1e-06
+        }
+    },
+    "fixed_params": {
+        "home_size": 2.5,
+        "k_average_active": 15.997503379649244,
+        "k_average_confined": 3.477098942259856,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923
+    }
+}
