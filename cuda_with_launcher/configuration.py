@@ -21,6 +21,25 @@ def date_to_str(date):
     return date.strftime('%Y-%m-%d')
 
 
+def date_to_spanish(date):
+    month = {
+        'Jan': 'Ene',
+        'Feb': 'Feb',
+        'Mar': 'Mar',
+        'Apr': 'Abr',
+        'May': 'May',
+        'Jun': 'Jun',
+        'Jul': 'Jul',
+        'Ago': 'Ago',
+        'Sep': 'Sep',
+        'Oct': 'Oct',
+        'Nov': 'Nov',
+        'Dec': 'Dic',
+    }
+    a,b = date.split()
+    return '\n'.join([month[1],b])
+
+
 def prepare_deaths_list(requested_country):
     "Returns tuple: `(deaths_list, first_day_deaths_list, lenght_deaths_list)`."
     deaths_complete_db = pandas.read_csv(r'real_data\Deaths_worldwide_1Aug.csv')
@@ -95,7 +114,7 @@ def prepare_p_active_list(requested_country, first_day_deaths_list, lenght_death
         if not p_value.empty:
         
             __p = float(p_value.values[0])
-            if True:#__p < 0:  #! solución a valores positivos
+            if __p < 0:
                 p_active[day] += float(p_value.values[0]) * 0.01
                 
     return p_active
@@ -114,8 +133,6 @@ def save_p_active(requested_country, p_active):
 
 def load_p_active(requested_country):
     return cp.load(f"real_data/data_by_country/{requested_country}_p_active.npy")
-
-
 
 ## Funciones más generales
 
@@ -139,8 +156,13 @@ def prepare_deaths_p_active(country: str, plot=False):
 
 
 def generate_configuration(country: str, *, data_location='real_data'):
+    if country in ["Venezuela (Bolivarian Republic "]:
+        return False
+
     k_active_db = pandas.read_csv(data_location+r'\kaverageall_locationsPLOSComp.csv')
     k_conf_db = pandas.read_csv(data_location+r'\kaveragehomePLOSComp.csv')
+    # population_db = pandas.read_csv(data_location+r'\Population_worldwide.csv')
+    # population = float(population_db[population_db['Country']==country]['Population'])
 
     conf = {
         "country" : country,
@@ -155,8 +177,8 @@ def generate_configuration(country: str, *, data_location='real_data'):
         "params" : {
             "offset" : {"min": -20, "max" : 20},
             "permeability" : {"min" : 0, "max" : 1},
-            "lambda" : {"min" : 0.05, "max" : 0.16},
-            "IFR" : {"min" : 0.008, "max" : 0.012},
+            "lambda" : {"min" : 0.05, "max" : 0.30},
+            "IFR" : {"min" : 0.007, "max" : 0.013},
             "what" : {"min" : 1/16, "max" : 1/6},
             "initial_i" : {"min" : 0, "max" : 1e-6},
         },
@@ -174,6 +196,7 @@ def generate_configuration(country: str, *, data_location='real_data'):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, 'w') as fp:
         json.dump(conf, fp, indent=4)
+    return True
 
 
 def read_configuration(country: str, print_config=False):
@@ -184,15 +207,16 @@ def read_configuration(country: str, print_config=False):
             if print_config:
                 print(conf)
     except Exception as e:
-        prepare_deaths_p_active(country, plot=True)
-        generate_configuration(country)
-        exit()
-        return read_configuration(country, print_config=print_config)
+        prepare_deaths_p_active(country, plot=False)
+        f = generate_configuration(country)
+        if f:
+            return read_configuration(country, print_config=print_config)
+        return
     return conf
 
 
-def save_configuration(configuration):
-    filename = f"configurations/{configuration['country']}_new.json" 
+def save_configuration(configuration, sufix='_new'):
+    filename = f"configurations/{configuration['country']}{sufix}.json" 
     with open(filename, 'w') as fp:
         json.dump(configuration, fp, indent=4)
 
@@ -206,16 +230,25 @@ def open_save_files(country: str, erase_prev=True) -> dict:
     files = {}
 
     for k,v in param_to_index.items():
-        filename = f"generated_data\data_by_country\{country}\{k}.dat" 
+        filename = f"generated_data/data_by_country/{country}/{k}.dat" 
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         files.update({k: open(filename, mode)})
-    files.update({'log_diff': open(f"generated_data\data_by_country\{country}\log_diff.dat", mode)})
+    files.update({'log_diff': open(f"generated_data\data_by_country/{country}/log_diff.dat", mode)})
+    files.update({'recovered': open(f"generated_data\data_by_country/{country}/recovered.dat", mode)})
 
     return files
 
 def close_save_files(files: dict):
     for file in files.values():
         file.close()
+
+def get_all_countries(data_location='real_data/'):
+    population_db = pandas.read_csv(data_location + 'Population_worldwide.csv')
+    countries_db = population_db["name"]
+    c_list = []
+    for i, country in countries_db.iteritems():
+        c_list.append(country)
+    return c_list
 
 
 if __name__=='__main__':

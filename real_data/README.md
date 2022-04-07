@@ -8,3 +8,5 @@ real_data\kaverageall_locationsPLOSComp.csv
 kaverageschoolPLOSComp.csv
 ## [Movility reduction by country](reducedgoogledataset.csv)
 reducedgoogledataset.csv
+## [Total population by country](Population_worldwide.csv)
+Population_worldwide.csv

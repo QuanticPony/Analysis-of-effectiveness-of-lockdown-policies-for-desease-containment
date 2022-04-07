@@ -51,11 +51,11 @@ def main(configuration, save_data: bool, analyze_data: bool, erase_prev_data: bo
         
         ## Graficar mejores simulaciones
         if execution==0:
-            plot_states(best_params, fixed_params, deaths_list, deaths_list_smooth, p_active, configuration, name=name)
+            recovered_array = plot_states(best_params, fixed_params, deaths_list, deaths_list_smooth, p_active, configuration, name=name)
 
         ## Guardar datos generados
         if save_data:
-            parameters_manager.save_parameters(files, best_params, best_log_diff)
+            parameters_manager.save_parameters(files, best_params, best_log_diff, recovered_array.get())
                     
 
     ## Cerrar archivos

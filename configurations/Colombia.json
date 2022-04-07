@@ -1,15 +1,15 @@
 {
     "country": "Colombia",
-    "total_population": 51500000.0,
+    "total_population": 50882.891,
     "max_days": 160,
     "simulation": {
         "n_simulations": 1000000,
         "n_executions": 1
     },
     "params": {
-        "offset" : {
-            "min": -10, 
-            "max" : 10
+        "offset": {
+            "min": -10,
+            "max": 10
         },
         "permeability": {
             "min": 0.24520576446974746,

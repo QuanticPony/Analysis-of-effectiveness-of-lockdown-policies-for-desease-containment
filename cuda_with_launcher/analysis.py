@@ -131,6 +131,7 @@ def plot_the_plots(country, max_days, *, save_pictures=True):
             percentiles.update({
                 k:{
                     "min" : k_array_percentil_5,
+                    "med" : k_array_median,
                     "max" : k_array_percentil_95
                 }})
         
@@ -149,10 +150,10 @@ def plot_the_plots(country, max_days, *, save_pictures=True):
         
         
         y_min, y_max = ax.get_ylim()
-        ax.vlines(k_array_median, ymin=y_min, ymax=y_max, label='Median', color='orange')
-        ax.vlines(k_array_percentil_5, ymin=y_min, ymax=y_max, label='Percentile 5', color='red')
-        ax.vlines(k_array_percentil_95, ymin=y_min, ymax=y_max, label='Percentile 95', color='purple')
-        ax.set_ylabel('Relative frecuency')
+        ax.vlines(k_array_median, ymin=y_min, ymax=y_max, label='Mediana', color='orange')
+        ax.vlines(k_array_percentil_5, ymin=y_min, ymax=y_max, label='Percentil 5', color='red')
+        ax.vlines(k_array_percentil_95, ymin=y_min, ymax=y_max, label='Percentil 95', color='purple')
+        ax.set_ylabel('Frecuencia relativa')
         
         ax.set_xlabel(f"{k}")
         ax.set_title(k.capitalize())
@@ -164,7 +165,7 @@ def plot_the_plots(country, max_days, *, save_pictures=True):
             'what' : r"$\xi$",
             'offset' : r"$offset$",
             'IFR' : r"$IFR$",
-            'log_diff' : r"Distance to objective function"
+            'log_diff' : r"Distancia a función objetivo"
         }[k]
         
         # if k=='initial_i':

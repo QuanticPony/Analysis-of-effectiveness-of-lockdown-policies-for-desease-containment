@@ -1,6 +1,6 @@
 {
     "country": "Italy",
-    "total_population": 59200000.0,
+    "total_population": 60461.826,
     "max_days": 80,
     "simulation": {
         "n_simulations": 5000000,
@@ -29,7 +29,7 @@
         },
         "initial_i": {
             "min": 0,
-            "max": 10e-06
+            "max": 1e-05
         }
     },
     "fixed_params": {

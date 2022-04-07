@@ -1,6 +1,6 @@
 {
     "country": "Spain",
-    "total_population": 47500000.0,
+    "total_population": 46754.778,
     "max_days": 90,
     "simulation": {
         "n_simulations": 1000000,
@@ -28,7 +28,7 @@
             "max": 0.16666666666666666
         },
         "initial_i": {
-            "min": 1e-9,
+            "min": 1e-09,
             "max": 8e-07
         },
         "eta": {

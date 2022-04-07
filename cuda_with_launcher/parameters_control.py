@@ -50,12 +50,15 @@ class Params_Manager:
             raise Exception("fixed_params array could not be completed with current options.")
 
 
-    def save_parameters(self, files, params, log_diff):
+    def save_parameters(self, files, params, log_diff, recovered):
         for i, l in enumerate(log_diff):
             for k,f in files.items():
                 if k=='log_diff':
                     f.write(str(log_diff[i]))
                     f.write('\n')
+                if k=='recovered':
+                    f.write(str(recovered*100))
+                    f.write('\n')
                 else:
                     f.write(str(params[param_to_index[k]][i]))
-                    f.write('\n') 
+                    f.write('\n')
