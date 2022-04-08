@@ -1,6 +1,6 @@
 {
     "country": "Colombia",
-    "total_population": 50882.891,
+    "total_population": 50882891,
     "max_days": 160,
     "simulation": {
         "n_simulations": 1000000,

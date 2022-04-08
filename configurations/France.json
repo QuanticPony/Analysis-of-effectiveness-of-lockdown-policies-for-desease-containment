@@ -1,6 +1,6 @@
 {
     "country": "France",
-    "total_population": 65273.511,
+    "total_population": 65273511,
     "max_days": 100,
     "simulation": {
         "n_simulations": 5000000,

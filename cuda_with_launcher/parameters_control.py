@@ -56,7 +56,7 @@ class Params_Manager:
                 if k=='log_diff':
                     f.write(str(log_diff[i]))
                     f.write('\n')
-                if k=='recovered':
+                elif k=='recovered':
                     f.write(str(recovered*100))
                     f.write('\n')
                 else:

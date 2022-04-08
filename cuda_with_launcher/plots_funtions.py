@@ -4,7 +4,7 @@ import datetime
 import cupy as cp
 import matplotlib.pyplot as plt
 import numpy as np
-from cuda_with_launcher.configuration import date_to_spanish
+from configuration import date_to_spanish
 
 from evolution import *
 from parameters_control import *

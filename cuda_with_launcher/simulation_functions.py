@@ -3,7 +3,7 @@ from math import ceil
 import cupy as cp
 import matplotlib.pyplot as plt
 import numpy as np
-from phaseportrait.sliders import Slider
+# from phaseportrait.sliders import Slider
 
 from evolution import *
 from parameters_control import *

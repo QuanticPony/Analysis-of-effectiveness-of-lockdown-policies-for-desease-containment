@@ -1,6 +1,6 @@
 {
     "country": "Israel",
-    "total_population": 8655.535,
+    "total_population": 8655535,
     "max_days": 110,
     "simulation": {
         "n_simulations": 1000000,
@@ -38,5 +38,6 @@
         "k_average_confined": 3.8400617250846905,
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
-    }
+    },
+    "first_day_deaths_list": "2020-01-22"
 }

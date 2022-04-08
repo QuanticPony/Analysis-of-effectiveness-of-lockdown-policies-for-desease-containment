@@ -1,6 +1,6 @@
 {
     "country": "Haiti",
-    "total_population": 11402.528,
+    "total_population": 11402528,
     "max_days": 110,
     "simulation": {
         "n_simulations": 1000000,
@@ -38,5 +38,6 @@
         "k_average_confined": 4.060566448679896,
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
-    }
+    },
+    "first_day_deaths_list": "2020-01-22"
 }

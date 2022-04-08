@@ -1,6 +1,6 @@
 {
     "country": "Mongolia",
-    "total_population": 3278.29,
+    "total_population": 3278290,
     "max_days": 110,
     "simulation": {
         "n_simulations": 1000000,
@@ -38,5 +38,6 @@
         "k_average_confined": 3.8392381225644026,
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
-    }
+    },
+    "first_day_deaths_list": "2020-01-22"
 }

@@ -1,0 +1,43 @@
+{
+    "country": "Botswana",
+    "total_population": 2351627,
+    "max_days": 110,
+    "simulation": {
+        "n_simulations": 1000000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": -12.666666666666666,
+            "max": 20
+        },
+        "permeability": {
+            "min": 0,
+            "max": 1
+        },
+        "lambda": {
+            "min": 0.05,
+            "max": 0.060639710755323706
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.0625,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 0,
+            "max": 3.4378056056387805e-12
+        }
+    },
+    "fixed_params": {
+        "home_size": 2.5,
+        "k_average_active": 17.769981513806833,
+        "k_average_confined": 4.056270969523272,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923
+    },
+    "first_day_deaths_list": "2020-01-22"
+}

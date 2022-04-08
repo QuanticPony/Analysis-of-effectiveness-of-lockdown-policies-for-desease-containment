@@ -1,6 +1,6 @@
 {
     "country": "Belgium",
-    "total_population": 11589.623,
+    "total_population": 11589623,
     "max_days": 110,
     "simulation": {
         "n_simulations": 1000000,
@@ -38,5 +38,6 @@
         "k_average_confined": 2.875559844377344,
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
-    }
+    },
+    "first_day_deaths_list": "2020-01-22"
 }

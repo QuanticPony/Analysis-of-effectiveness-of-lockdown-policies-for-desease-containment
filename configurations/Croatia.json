@@ -1,6 +1,6 @@
 {
     "country": "Croatia",
-    "total_population": 4105.267,
+    "total_population": 4105267,
     "max_days": 110,
     "simulation": {
         "n_simulations": 1000000,
@@ -38,5 +38,6 @@
         "k_average_confined": 3.404599015798322,
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
-    }
+    },
+    "first_day_deaths_list": "2020-01-22"
 }

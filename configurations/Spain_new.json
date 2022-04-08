@@ -1,22 +1,22 @@
 {
     "country": "Spain",
-    "total_population": 47500000.0,
+    "total_population": 46754778,
     "max_days": 90,
     "simulation": {
-        "n_simulations": 5000000,
-        "n_executions": 5
+        "n_simulations": 100000,
+        "n_executions": 1
     },
     "params": {
         "offset": {
-            "min": 4,
-            "max": 8
+            "min": 4.0,
+            "max": 8.0
         },
         "permeability": {
             "min": 0,
             "max": 0.1475092296728151
         },
         "lambda": {
-            "min": 0.06007870404575257,
+            "min": 0.07398274119671673,
             "max": 0.12317545814993232
         },
         "IFR": {

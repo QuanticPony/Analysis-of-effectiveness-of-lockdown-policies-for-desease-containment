@@ -1,6 +1,6 @@
 {
     "country": "Fiji",
-    "total_population": 896.445,
+    "total_population": 896445,
     "max_days": 110,
     "simulation": {
         "n_simulations": 1000000,
@@ -38,5 +38,6 @@
         "k_average_confined": 3.82178948641968,
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
-    }
+    },
+    "first_day_deaths_list": "2020-01-22"
 }

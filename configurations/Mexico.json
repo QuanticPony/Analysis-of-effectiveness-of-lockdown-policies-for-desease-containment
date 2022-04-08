@@ -1,6 +1,6 @@
 {
     "country": "Mexico",
-    "total_population": 128932.753,
+    "total_population": 128932753,
     "max_days": 110,
     "simulation": {
         "n_simulations": 1000000,
@@ -38,5 +38,6 @@
         "k_average_confined": 4.036690233405397,
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
-    }
+    },
+    "first_day_deaths_list": "2020-01-22"
 }

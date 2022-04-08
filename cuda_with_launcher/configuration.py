@@ -30,14 +30,14 @@ def date_to_spanish(date):
         'May': 'May',
         'Jun': 'Jun',
         'Jul': 'Jul',
-        'Ago': 'Ago',
+        'Aug': 'Ago',
         'Sep': 'Sep',
         'Oct': 'Oct',
         'Nov': 'Nov',
         'Dec': 'Dic',
     }
     a,b = date.split()
-    return '\n'.join([month[1],b])
+    return '\n'.join([month[a],b])
 
 
 def prepare_deaths_list(requested_country):
@@ -243,8 +243,8 @@ def close_save_files(files: dict):
         file.close()
 
 def get_all_countries(data_location='real_data/'):
-    population_db = pandas.read_csv(data_location + 'Population_worldwide.csv')
-    countries_db = population_db["name"]
+    deaths_db = pandas.read_csv(data_location + "Deaths_worldwide_1Aug.csv")
+    countries_db = deaths_db["Country"].drop_duplicates()
     c_list = []
     for i, country in countries_db.iteritems():
         c_list.append(country)

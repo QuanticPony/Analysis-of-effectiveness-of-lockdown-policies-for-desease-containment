@@ -1,6 +1,6 @@
 {
     "country": "Greece",
-    "total_population": 10423.054,
+    "total_population": 10423054,
     "max_days": 110,
     "simulation": {
         "n_simulations": 1000000,
@@ -38,5 +38,6 @@
         "k_average_confined": 3.1777322890561424,
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
-    }
+    },
+    "first_day_deaths_list": "2020-01-22"
 }

@@ -2,7 +2,7 @@ from cProfile import label
 import matplotlib.pyplot as plt
 import numpy as np
 
-from simulation_functions import smooth_deaths_list, prepare_deaths_list, prepare_p_active_list, save_p_active
+from configuration import smooth_deaths_list, prepare_deaths_list, prepare_p_active_list, save_p_active
 
 types = ['retail_and_recreation_percent_change_from_baseline']#,
 # 'grocery_and_pharmacy_percent_change_from_baseline',
@@ -32,4 +32,4 @@ if __name__=='__main__':
 
     ax.grid()
     ax.legend()
-    # plt.show()
+    plt.show()

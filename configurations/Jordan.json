@@ -1,6 +1,6 @@
 {
     "country": "Jordan",
-    "total_population": 10203.134,
+    "total_population": 10203134,
     "max_days": 110,
     "simulation": {
         "n_simulations": 1000000,
@@ -38,5 +38,6 @@
         "k_average_confined": 4.32714853454928,
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
-    }
+    },
+    "first_day_deaths_list": "2020-01-22"
 }

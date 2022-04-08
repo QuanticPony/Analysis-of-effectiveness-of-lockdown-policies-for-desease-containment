@@ -1,6 +1,6 @@
 {
     "country": "United Kingdom of Great Britain",
-    "total_population": 67886.011,
+    "total_population": 67886011,
     "max_days": 100,
     "simulation": {
         "n_simulations": 5000000,

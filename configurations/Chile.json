@@ -1,6 +1,6 @@
 {
     "country": "Chile",
-    "total_population": 19116.201,
+    "total_population": 19116201,
     "max_days": 110,
     "simulation": {
         "n_simulations": 1000000,
@@ -38,5 +38,6 @@
         "k_average_confined": 3.6595789479804974,
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
-    }
+    },
+    "first_day_deaths_list": "2020-01-22"
 }

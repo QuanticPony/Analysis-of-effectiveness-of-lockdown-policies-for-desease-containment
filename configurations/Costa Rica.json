@@ -1,6 +1,6 @@
 {
     "country": "Costa Rica",
-    "total_population": 5094.118,
+    "total_population": 5094118,
     "max_days": 110,
     "simulation": {
         "n_simulations": 1000000,
@@ -38,5 +38,6 @@
         "k_average_confined": 3.6874308044660062,
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
-    }
+    },
+    "first_day_deaths_list": "2020-01-22"
 }

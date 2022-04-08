@@ -1,6 +1,6 @@
 {
     "country": "Rwanda",
-    "total_population": 12952.218,
+    "total_population": 12952218,
     "max_days": 110,
     "simulation": {
         "n_simulations": 1000000,
@@ -38,5 +38,6 @@
         "k_average_confined": 4.507750132794366,
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
-    }
+    },
+    "first_day_deaths_list": "2020-01-22"
 }

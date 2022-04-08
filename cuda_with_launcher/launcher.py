@@ -1,8 +1,7 @@
 from numpy import percentile
 import datetime
-from cuda_with_launcher.configuration import get_all_countries
 from kernel import main
-from configuration import generate_configuration, read_configuration, prepare_deaths_p_active, save_configuration, date_to_str
+from configuration import generate_configuration, read_configuration, prepare_deaths_p_active, save_configuration, date_to_str, get_all_countries
 
 if __name__=='__main__':
 
@@ -16,14 +15,22 @@ if __name__=='__main__':
     # configuration_ref = configuration.copy()
 
 
-    TOTAL_ITERATIONS = 10
+    TOTAL_ITERATIONS = 3
     
     FINAL_IMAGE = False
 
 
     #! Todos los paises
     all_countries = get_all_countries()
+    # all_countries = ['Austria']
+    contador = -1
     for c in all_countries:
+        contador += 1
+        if contador==24:
+            break
+        if contador < 4:
+            continue
+        
         print(f"Comenzando {c}:")
         configuration_ref = read_configuration(c)
 
@@ -32,22 +39,25 @@ if __name__=='__main__':
         configuration["simulation"]["n_executions"] = 1
 
         for i in range(TOTAL_ITERATIONS):
-            print(f"\n\tIteración {i+1}/{TOTAL_ITERATIONS}")
+            print(f"\tIteración {i+1}/{TOTAL_ITERATIONS}")
 
             percentiles = main(configuration, SAVE_DATA, ANALYZE_DATA, ERASE_PREV_DATA, SAVE_PERCENTAGE, name=i, save_pictures= (i==TOTAL_ITERATIONS-1) )
             for k, v in percentiles.items():
                 distm = v["med"] - v["min"]
                 distM = v["max"] - v["med"]
+                dist = (distm + distM)/2
                 
                 if k in ["offset", "lambda", "permeability"]:
-                    configuration["params"][k]["min"] = max(v["min"] - distm*(distm/distM), configuration_ref["params"][k]["min"])
-                    configuration["params"][k]["max"] = min(v["max"] + distM*(distM/distm), configuration_ref["params"][k]["max"])
+                    configuration["params"][k]["min"] = max(v["min"] - dist*(distM/distm), configuration_ref["params"][k]["min"])
+                    configuration["params"][k]["max"] = min(v["max"] + dist*(distm/distM), configuration_ref["params"][k]["max"])
                 if k=="initial_i":
-                    configuration["params"][k]["min"] = max(v["min"] - distm*(distm/distM), configuration_ref["params"][k]["min"])
-                    configuration["params"][k]["max"] = min(v["max"] + distM*(distM/distm), configuration_ref["params"][k]["max"])
+                    configuration["params"][k]["min"] = v["min"] - dist*(distM/distm)
+                    if configuration["params"][k]["min"] < 0:
+                        configuration["params"][k]["min"] = 0
+                    configuration["params"][k]["max"] = v["max"] + 2*dist*(distm/distM)
 
         save_configuration(configuration, sufix='_new')
-        print("\n\n")
+        print("\n")
 
     exit()
 
@@ -79,4 +89,3 @@ if __name__=='__main__':
         # configuration.update({'first_day_deaths_list': first_day_deaths_list.strftime(r"%Y-%m-%d")})
         # save_configuration(configuration)
         # percentiles = main(configuration, SAVE_DATA, ANALYZE_DATA, ERASE_PREV_DATA, SAVE_PERCENTAGE)
-        
