@@ -1,0 +1,44 @@
+{
+    "country": "France",
+    "total_population": 65273511,
+    "max_days": 100,
+    "simulation": {
+        "n_simulations": 1000000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 9.5,
+            "max": 15.5
+        },
+        "permeability": {
+            "min": 0,
+            "max": 0.1
+        },
+        "lambda": {
+            "min": 0.05,
+            "max": 0.08089146217317737
+        },
+        "IFR": {
+            "min": 0.008,
+            "max": 0.012
+        },
+        "what": {
+            "min": 0.0625,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 0,
+            "max": 1.4499541629496727e-05
+        }
+    },
+    "fixed_params": {
+        "home_size": 2.3,
+        "k_average_active": 11.78077057136881,
+        "k_average_confined": 3.1001133892795587,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0
+}

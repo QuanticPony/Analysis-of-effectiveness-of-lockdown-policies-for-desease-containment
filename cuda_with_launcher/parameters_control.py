@@ -19,6 +19,17 @@ fixed_params_to_index = {
     'eta' : 4,
 }
 
+all_params = [
+    'IFR',
+    'initial_i',
+    'lambda',
+    'log_diff',
+    'offset',
+    'permeability',
+    'recovered',
+    'what'
+]
+
 class Params_Manager:
     def __init__(self, configuration: dict):
         self.configuration = configuration

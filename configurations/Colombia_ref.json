@@ -1,19 +1,23 @@
 {
     "country": "Colombia",
-    "total_population": 51500000.0,
+    "total_population": 50882891,
     "max_days": 160,
     "simulation": {
-        "n_simulations": 1000000,
+        "n_simulations": 2000000,
         "n_executions": 1
     },
     "params": {
+        "offset": {
+            "min": -10,
+            "max": 10
+        },
         "permeability": {
-            "min": 0,
+            "min": 0.24520576446974746,
             "max": 1
         },
         "lambda": {
-            "min": 0.01,
-            "max": 0.6
+            "min": 0.03795162051886354,
+            "max": 0.06084606897515169
         },
         "IFR": {
             "min": 0.006,
@@ -21,11 +25,15 @@
         },
         "what": {
             "min": 0.0725,
-            "max": 0.11666666666666666
+            "max": 0.11666666666666665
         },
         "initial_i": {
             "min": 0,
-            "max": 5e-7
+            "max": 1.9652971369099293e-10
+        },
+        "eta": {
+            "min": 0.1,
+            "max": 0.34555824528908197
         }
     },
     "fixed_params": {
@@ -35,5 +43,6 @@
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
     },
-    "first_day_deaths_list": "2020-01-22"
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0
 }

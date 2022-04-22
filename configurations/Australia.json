@@ -1,15 +1,15 @@
 {
     "country": "Australia",
     "total_population": 25499884,
-    "max_days": 110,
+    "max_days": 85,
     "simulation": {
-        "n_simulations": 1000000,
+        "n_simulations": 2000000,
         "n_executions": 1
     },
     "params": {
         "offset": {
-            "min": -20,
-            "max": 20
+            "min": -15.25,
+            "max": -3.7142857142857144
         },
         "permeability": {
             "min": 0,
@@ -29,7 +29,7 @@
         },
         "initial_i": {
             "min": 0,
-            "max": 1e-06
+            "max": 7.249731564939175e-08
         }
     },
     "fixed_params": {
@@ -39,5 +39,6 @@
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
     },
-    "first_day_deaths_list": "2020-01-22"
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0
 }

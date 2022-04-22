@@ -1,6 +1,6 @@
 {
     "country": "Colombia",
-    "total_population": 51500000.0,
+    "total_population": 50882891,
     "max_days": 160,
     "simulation": {
         "n_simulations": 1000000,
@@ -12,7 +12,7 @@
             "max": 10
         },
         "permeability": {
-            "min": 0.24520576446974746,
+            "min": 0.31429852293738325,
             "max": 1
         },
         "lambda": {
@@ -29,7 +29,7 @@
         },
         "initial_i": {
             "min": 0,
-            "max": 2.530708571815311e-07
+            "max": 1.1684626278948361e-07
         },
         "eta": {
             "min": 0.1,
@@ -43,5 +43,6 @@
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
     },
-    "first_day_deaths_list": "2020-01-22"
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0
 }

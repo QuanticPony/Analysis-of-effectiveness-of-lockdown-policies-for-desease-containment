@@ -44,7 +44,7 @@ def plot_states(params, fixed_params, deaths_list, smooth_deaths_list, p_active,
     while (_time<NEW_MAX_DAYS).any():
     # while __time_ref<NEW_MAX_DAYS:
         
-        evolve(params, fixed_params, states, p_active[__time_ref])
+        evolve(params, fixed_params, states, p_active[(__time_ref-NEW_MAX_DAYS) * (__time_ref<MAX_DAYS) + NEW_MAX_DAYS])
         
         deaths[_time * (_time>=0) * (NEW_MAX_DAYS>_time),_range] += states[5,_range]*TOTAL_POPULATION * (_time<NEW_MAX_DAYS) * (_time>=0)
         # deaths[__time_ref, _range] += states[5,_range]*TOTAL_POPULATION

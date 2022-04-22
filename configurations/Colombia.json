@@ -3,7 +3,7 @@
     "total_population": 50882891,
     "max_days": 160,
     "simulation": {
-        "n_simulations": 1000000,
+        "n_simulations": 2000000,
         "n_executions": 1
     },
     "params": {
@@ -29,7 +29,7 @@
         },
         "initial_i": {
             "min": 0,
-            "max": 2.530708571815311e-07
+            "max": 1.9652971369099293e-10
         },
         "eta": {
             "min": 0.1,
@@ -43,5 +43,6 @@
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
     },
-    "first_day_deaths_list": "2020-01-22"
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0
 }

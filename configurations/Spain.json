@@ -1,23 +1,24 @@
 {
     "country": "Spain",
     "total_population": 46754778,
-    "max_days": 90,
+    "min_days": 0,
+    "max_days": 110,
     "simulation": {
-        "n_simulations": 1000000,
+        "n_simulations": 2000000,
         "n_executions": 1
     },
     "params": {
         "offset": {
-            "min": 4,
-            "max": 8
+            "min": -2,
+            "max": 20
         },
         "permeability": {
             "min": 0,
-            "max": 0.1475092296728151
+            "max": 0.051109921856830255
         },
         "lambda": {
-            "min": 0.06007870404575257,
-            "max": 0.12317545814993232
+            "min": 0.01,
+            "max": 0.10445500566575924
         },
         "IFR": {
             "min": 0.008,
@@ -25,11 +26,11 @@
         },
         "what": {
             "min": 0.0725,
-            "max": 0.16666666666666666
+            "max": 0.1666085772728501
         },
         "initial_i": {
-            "min": 1e-09,
-            "max": 8e-07
+            "min": 0,
+            "max": 1.8355302939632482e-05
         },
         "eta": {
             "min": 0.1,

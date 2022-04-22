@@ -15,28 +15,36 @@ if __name__=='__main__':
     # configuration_ref = configuration.copy()
 
 
-    TOTAL_ITERATIONS = 3
+    TOTAL_ITERATIONS = 4
     
     FINAL_IMAGE = False
 
 
     #! Todos los paises
     all_countries = get_all_countries()
-    # all_countries = ['Austria']
+    all_countries = ['Spain']
     contador = -1
     for c in all_countries:
         contador += 1
-        if contador==24:
+        if contador==1:
             break
-        if contador < 4:
-            continue
+        # if contador < 16:
+        #     continue
         
         print(f"Comenzando {c}:")
-        configuration_ref = read_configuration(c)
+        configuration_ref = read_configuration(c, sufix='')
+
+        configuration_ref["simulation"]["n_simulations"] = 2000000
+        configuration_ref["simulation"]["n_executions"] = 1
+        configuration_ref["params"]["offset"]["min"] = -2
+        configuration_ref["params"]["offset"]["max"] = 20
 
         configuration = configuration_ref.copy()
-        configuration["simulation"]["n_simulations"] = 1000000
-        configuration["simulation"]["n_executions"] = 1
+
+        # configuration["params"]["lambda"]["min"] = 0.01
+        # configuration["params"]["lambda"]["max"] = 0.20
+
+        # configuration["params"]["initial_i"]["max"] = 0.01/configuration["total_population"]
 
         for i in range(TOTAL_ITERATIONS):
             print(f"\tIteración {i+1}/{TOTAL_ITERATIONS}")
@@ -47,16 +55,22 @@ if __name__=='__main__':
                 distM = v["max"] - v["med"]
                 dist = (distm + distM)/2
                 
-                if k in ["offset", "lambda", "permeability"]:
-                    configuration["params"][k]["min"] = max(v["min"] - dist*(distM/distm), configuration_ref["params"][k]["min"])
-                    configuration["params"][k]["max"] = min(v["max"] + dist*(distm/distM), configuration_ref["params"][k]["max"])
+                if k not in ["offset", "permeability", "initial_i"]:
+                    configuration["params"][k]["min"] = max(v["min"] - 2*dist*(distM/distm), configuration_ref["params"][k]["min"])
+                    configuration["params"][k]["max"] = min(v["max"] + 2*dist*(distm/distM), configuration_ref["params"][k]["max"])
+
+
+                if k=="permeability":
+                    configuration["params"][k]["min"] = max(v["min"] - 3*dist, configuration_ref["params"][k]["min"])
+                    configuration["params"][k]["max"] = min(v["max"] + 3*dist, configuration_ref["params"][k]["max"])    
+                
                 if k=="initial_i":
                     configuration["params"][k]["min"] = v["min"] - dist*(distM/distm)
                     if configuration["params"][k]["min"] < 0:
                         configuration["params"][k]["min"] = 0
-                    configuration["params"][k]["max"] = v["max"] + 2*dist*(distm/distM)
+                    configuration["params"][k]["max"] = v["max"] +5*dist*(distm/distM)
 
-        save_configuration(configuration, sufix='_new')
+        save_configuration(configuration, sufix='')
         print("\n")
 
     exit()

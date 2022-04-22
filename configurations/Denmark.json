@@ -1,23 +1,23 @@
 {
     "country": "Denmark",
     "total_population": 5792202,
-    "max_days": 110,
+    "max_days": 95,
     "simulation": {
-        "n_simulations": 1000000,
+        "n_simulations": 2000000,
         "n_executions": 1
     },
     "params": {
         "offset": {
-            "min": -20,
+            "min": -2,
             "max": 20
         },
         "permeability": {
             "min": 0,
-            "max": 1
+            "max": 0.5987358429635798
         },
         "lambda": {
-            "min": 0.05,
-            "max": 0.3
+            "min": 0.01,
+            "max": 0.2
         },
         "IFR": {
             "min": 0.007,
@@ -29,7 +29,7 @@
         },
         "initial_i": {
             "min": 0,
-            "max": 1e-06
+            "max": 0.002962241005585423
         }
     },
     "fixed_params": {
@@ -39,5 +39,6 @@
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
     },
-    "first_day_deaths_list": "2020-01-22"
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0
 }

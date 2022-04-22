@@ -149,6 +149,9 @@ def prepare_deaths_p_active(country: str, plot=False):
         f1, a1 = plot_deaths(deaths_list)
         f2, a2 = plot_p_active(p_active)
         plt.show()
+        
+        plt.close(f1)
+        plt.close(f2)
     
     save_deaths_list(country, deaths_list)
     save_p_active(country, p_active)
@@ -199,8 +202,8 @@ def generate_configuration(country: str, *, data_location='real_data'):
     return True
 
 
-def read_configuration(country: str, print_config=False):
-    filename = f"configurations/{country}.json" 
+def read_configuration(country: str, print_config=False, sufix='_ref'):
+    filename = f"configurations/{country}{sufix}.json" 
     try:
         with open(filename, 'r') as fp:
             conf = json.load(fp)
@@ -222,19 +225,21 @@ def save_configuration(configuration, sufix='_new'):
 
         
 
-def open_save_files(country: str, erase_prev=True) -> dict:
+def open_save_files(country: str, *, erase_prev=True, mode=None) -> dict:
     """Open files needed for saving data generated. Returns dict with open files""" 
     from simulation_functions import param_to_index
     
-    mode = 'w' if erase_prev else 'a'
+    _mode = 'w' if erase_prev else 'a'
+    if mode is not None:
+        _mode = mode
     files = {}
 
     for k,v in param_to_index.items():
         filename = f"generated_data/data_by_country/{country}/{k}.dat" 
         os.makedirs(os.path.dirname(filename), exist_ok=True)
-        files.update({k: open(filename, mode)})
-    files.update({'log_diff': open(f"generated_data\data_by_country/{country}/log_diff.dat", mode)})
-    files.update({'recovered': open(f"generated_data\data_by_country/{country}/recovered.dat", mode)})
+        files.update({k: open(filename, _mode)})
+    files.update({'log_diff': open(f"generated_data\data_by_country/{country}/log_diff.dat", _mode)})
+    files.update({'recovered': open(f"generated_data\data_by_country/{country}/recovered.dat", _mode)})
 
     return files
 
@@ -243,12 +248,11 @@ def close_save_files(files: dict):
         file.close()
 
 def get_all_countries(data_location='real_data/'):
-    deaths_db = pandas.read_csv(data_location + "Deaths_worldwide_1Aug.csv")
-    countries_db = deaths_db["Country"].drop_duplicates()
-    c_list = []
-    for i, country in countries_db.iteritems():
-        c_list.append(country)
-    return c_list
+    countries_list = []
+    with open("real_data/country_list.txt", 'r') as file:
+        for line in file:
+            countries_list.append(line.strip('\n'))
+    return countries_list
 
 
 if __name__=='__main__':

@@ -1,5 +1,6 @@
 from math import floor, modf
 import matplotlib.pyplot as plt
+from configuration import open_save_files
 from simulation_functions import *
 
 def median(array):
@@ -76,9 +77,9 @@ def correlations(params, n_bins, log_diff, country):
                     xbins = np.linspace(xymin[0], xymax[0], n_bins_)
                     ybins = np.arange(int(xymin[1])-0.5, int(xymax[1])+0.5)
                 
-                axScatter.hist2d(x, y, bins=[xbins, ybins], weights=log_diff)
-                axHistx.hist(x, bins=xbins, weights=log_diff)
-                axHisty.hist(y, bins=ybins, orientation='horizontal', weights=log_diff)
+                axScatter.hist2d(x, y, bins=[xbins, ybins], weights=1/log_diff)
+                axHistx.hist(x, bins=xbins, weights=1/log_diff)
+                axHisty.hist(y, bins=ybins, orientation='horizontal', weights=1/log_diff)
                 
                 axHistx.set_xlim(axScatter.get_xlim())
                 axHisty.set_ylim(axScatter.get_ylim())
@@ -89,12 +90,8 @@ def correlations(params, n_bins, log_diff, country):
 
 def plot_the_plots(country, max_days, *, save_pictures=True):
         
-    files = {}
-    mode = 'r'
-    for k,v in param_to_index.items():
-        files.update({k: open(f"generated_data\data_by_country\{country}\{k}.dat", mode)})
-    files.update({'log_diff': open(f"generated_data\data_by_country\{country}\log_diff.dat", mode)})
-        
+    files = open_save_files(country, mode='r')
+    
         
     lenf = sum(1 for _ in files['IFR'])
     params = np.zeros([len(files.keys()), lenf])
@@ -113,21 +110,22 @@ def plot_the_plots(country, max_days, *, save_pictures=True):
     percentiles = {}
                 
     for k,f in files.items():
-        # if k=='log_diff':
-        #     continue
+        # TODO: cambiar?
+        if k=='recovered':
+            continue
         
         
-        if k!='log_diff':
+        if k not in ['log_diff', 'recovered']:
             k_array = params[param_to_index[k]].copy()
         else:
-            k_array = 1/log_diff.copy()
+            k_array = log_diff.copy()
             
         k_array.sort()
             
         k_array_median = median(k_array)
         k_array_percentil_5 = percentil(k_array, 5)
         k_array_percentil_95 = percentil(k_array, 95)
-        if k!='log_diff':
+        if k not in ['log_diff', 'recovered']:
             percentiles.update({
                 k:{
                     "min" : k_array_percentil_5,
@@ -141,10 +139,10 @@ def plot_the_plots(country, max_days, *, save_pictures=True):
         
         if k == 'offset':
             k_array = list(map(int, k_array))
-            ax.hist(k_array, np.arange(min(k_array)-0.5, max(k_array)+0.5, 1), density=True, align='mid', weights=log_diff)
+            ax.hist(k_array, np.arange(min(k_array)-0.5, max(k_array)+0.5, 1), density=True, align='mid', weights=1/log_diff)
         else:
             if k!='log_diff':
-                ax.hist(k_array, 20, density=True, weights=log_diff)
+                ax.hist(k_array, 20, density=True, weights=1/log_diff)
             else:
                 ax.hist(k_array, 20, density=True)
         
@@ -186,6 +184,6 @@ def plot_the_plots(country, max_days, *, save_pictures=True):
         
 if __name__=='__main__':
     
-    COUNTRY = 'Italy'
+    COUNTRY = 'Switzerland'
     MAX_DAYS = 60
     plot_the_plots(COUNTRY, MAX_DAYS)

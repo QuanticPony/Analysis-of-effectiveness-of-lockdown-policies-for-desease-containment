@@ -1,23 +1,23 @@
 {
     "country": "Austria",
     "total_population": 9006398,
-    "max_days": 110,
+    "max_days": 85,
     "simulation": {
-        "n_simulations": 1000000,
+        "n_simulations": 2000000,
         "n_executions": 1
     },
     "params": {
         "offset": {
-            "min": 10.25,
-            "max": 16.0
+            "min": 2.666666666666667,
+            "max": 12.333333333333332
         },
         "permeability": {
             "min": 0,
-            "max": 0.09640443187483305
+            "max": 0.6555143038770911
         },
         "lambda": {
             "min": 0.05,
-            "max": 0.061222875249972254
+            "max": 0.3
         },
         "IFR": {
             "min": 0.007,
@@ -29,7 +29,7 @@
         },
         "initial_i": {
             "min": 0,
-            "max": 5.6187230919651315e-06
+            "max": 9.071986309177503e-07
         }
     },
     "fixed_params": {
@@ -39,5 +39,6 @@
         "mu": 0.23809523809523808,
         "eta": 0.1923076923076923
     },
-    "first_day_deaths_list": "2020-01-22"
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0
 }

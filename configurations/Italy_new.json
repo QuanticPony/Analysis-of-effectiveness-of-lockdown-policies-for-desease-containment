@@ -1,0 +1,44 @@
+{
+    "country": "Italy",
+    "total_population": 60461826,
+    "max_days": 100,
+    "simulation": {
+        "n_simulations": 1000000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 0,
+            "max": 8
+        },
+        "permeability": {
+            "min": 0,
+            "max": 0.5
+        },
+        "lambda": {
+            "min": 0.04,
+            "max": 0.09
+        },
+        "IFR": {
+            "min": 0.008,
+            "max": 0.012
+        },
+        "what": {
+            "min": 0.0625,
+            "max": 0.1666666666666666
+        },
+        "initial_i": {
+            "min": 0,
+            "max": 2.233919410899362e-05
+        }
+    },
+    "fixed_params": {
+        "home_size": 2.5,
+        "k_average_active": 14.36572149377492,
+        "k_average_confined": 2.938776873980252,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0
+}
