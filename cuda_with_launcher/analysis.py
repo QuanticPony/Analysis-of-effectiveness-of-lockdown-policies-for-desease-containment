@@ -31,75 +31,78 @@ def correlations(params, n_bins, log_diff, country, with_seaborn=False):
     
     from matplotlib.ticker import NullFormatter
     
-    for i_n, i in param_to_index.items():
-        for j_n, j in param_to_index.items():
-            if i < j:
+    # for i_n, i in param_to_index.items():
+    #     for j_n, j in param_to_index.items():
+    #         if i < j:
                 
-                try:
-                    x = params[i,:].get()
-                    y = params[j,:].get()
-                except AttributeError:
-                    x = params[i,:]
-                    y = params[j,:]
+    #             try:
+    #                 x = params[i,:].get()
+    #                 y = params[j,:].get()
+    #             except AttributeError:
+    #                 x = params[i,:]
+    #                 y = params[j,:]
                 
-                nullfmt = NullFormatter()         # no labels
+    #             nullfmt = NullFormatter()         # no labels
                 
-                # definitions for the axes
-                left, width = 0.1, 0.65
-                bottom, height = 0.1, 0.65
-                bottom_h = left_h = left + width + 0.02
+    #             # definitions for the axes
+    #             left, width = 0.1, 0.65
+    #             bottom, height = 0.1, 0.65
+    #             bottom_h = left_h = left + width + 0.02
                 
-                rect_scatter = [left, bottom, width, height]
-                rect_histx = [left, bottom_h, width, 0.2]
-                rect_histy = [left_h, bottom, 0.2, height]
+    #             rect_scatter = [left, bottom, width, height]
+    #             rect_histx = [left, bottom_h, width, 0.2]
+    #             rect_histy = [left_h, bottom, 0.2, height]
                 
-                # start with a rectangular Figure
-                fig = plt.figure(1, figsize=(8, 8))
+    #             # start with a rectangular Figure
+    #             fig = plt.figure(1, figsize=(8, 8))
                 
-                axScatter = plt.axes(rect_scatter)
-                axHistx = plt.axes(rect_histx)
-                axHistx.set_title("$"+ i_n +"$")
-                axHisty = plt.axes(rect_histy)
-                axHisty.set_title("$"+ j_n +"$")
+    #             axScatter = plt.axes(rect_scatter)
+    #             axHistx = plt.axes(rect_histx)
+    #             axHistx.set_title("$"+ i_n +"$")
+    #             axHisty = plt.axes(rect_histy)
+    #             axHisty.set_title("$"+ j_n +"$")
                 
-                # no labels
-                axHistx.xaxis.set_major_formatter(nullfmt)
-                axHisty.yaxis.set_major_formatter(nullfmt)
+    #             # no labels
+    #             axHistx.xaxis.set_major_formatter(nullfmt)
+    #             axHisty.yaxis.set_major_formatter(nullfmt)
                 
-                # the scatter plot:
-                # axScatter.scatter(x, y)
+    #             # the scatter plot:
+    #             # axScatter.scatter(x, y)
                 
                 
-                # now determine nice limits by hand:
-                xymax = [np.max(x), np.max(y)]
-                xymin = [np.min(x), np.min(y)]
+    #             # now determine nice limits by hand:
+    #             xymax = [np.max(x), np.max(y)]
+    #             xymin = [np.min(x), np.min(y)]
                 
-                axScatter.set_xlim((xymin[0], xymax[0]))
-                axScatter.set_ylim((xymin[1], xymax[1]))
+    #             axScatter.set_xlim((xymin[0], xymax[0]))
+    #             axScatter.set_ylim((xymin[1], xymax[1]))
                 
-                if i not in [param_to_index['offset']]:
-                    xbins = np.linspace(xymin[0], xymax[0], n_bins)
-                else:
-                    n_bins_ = int(xymax[0] - xymin[0]) +1 
-                    xbins = np.arange(int(xymin[0])-0.5, int(xymax[0])+0.5)
+    #             if i not in [param_to_index['offset']]:
+    #                 xbins = np.linspace(xymin[0], xymax[0], n_bins)
+    #             else:
+    #                 n_bins_ = int(xymax[0] - xymin[0]) +1 
+    #                 xbins = np.arange(int(xymin[0])-0.5, int(xymax[0])+0.5)
                     
-                if j not in [param_to_index['offset']]:
-                    ybins = np.linspace(xymin[1], xymax[1], n_bins)
-                else:
-                    n_bins_ = int(xymax[1] - xymin[1]) +1 
-                    xbins = np.linspace(xymin[0], xymax[0], n_bins_)
-                    ybins = np.arange(int(xymin[1])-0.5, int(xymax[1])+0.5)
+    #             if j not in [param_to_index['offset']]:
+    #                 ybins = np.linspace(xymin[1], xymax[1], n_bins)
+    #             else:
+    #                 n_bins_ = int(xymax[1] - xymin[1]) +1 
+    #                 xbins = np.linspace(xymin[0], xymax[0], n_bins_)
+    #                 ybins = np.arange(int(xymin[1])-0.5, int(xymax[1])+0.5)
                 
-                axScatter.hist2d(x, y, bins=[xbins, ybins], weights=1/log_diff)
-                axHistx.hist(x, bins=xbins, weights=1/log_diff)
-                axHisty.hist(y, bins=ybins, orientation='horizontal', weights=1/log_diff)
+    #             axScatter.hist2d(x, y, bins=[xbins, ybins], weights=1/log_diff)
+    #             axHistx.hist(x, bins=xbins, weights=1/log_diff)
+    #             axHisty.hist(y, bins=ybins, orientation='horizontal', weights=1/log_diff)
                 
-                axHistx.set_xlim(axScatter.get_xlim())
-                axHisty.set_ylim(axScatter.get_ylim())
+    #             axHistx.set_xlim(axScatter.get_xlim())
+    #             axHisty.set_ylim(axScatter.get_ylim())
                 
-                fig.savefig(f'images\images_by_country\{country}\correlation_{i_n}_{j_n}.png')
-                plt.close(fig)
+    #             fig.savefig(f'images\images_by_country\{country}\correlation_{i_n}_{j_n}.png')
+    #             plt.close(fig)
 
+    db = pandas.DataFrame(columns=param_to_index.keys())
+    for p in param_to_index:
+        db[p] = params[param_to_index[p]]
 
 
 
