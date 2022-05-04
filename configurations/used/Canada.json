@@ -1,0 +1,46 @@
+{
+    "country": "Canada",
+    "total_population": 37742154,
+    "max_days": 110,
+    "simulation": {
+        "n_simulations": 1500000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 10.0,
+            "max": 18.0
+        },
+        "permeability": {
+            "min": 0,
+            "max": 0.07288300282725242
+        },
+        "lambda": {
+            "min": 0.07097385456372944,
+            "max": 0.0735167324852088
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.1037727865398373,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 0,
+            "max": 9.067080059684527e-08
+        }
+    },
+    "fixed_params": {
+        "home_size": 2.5,
+        "k_average_active": 12.567023181192504,
+        "k_average_confined": 3.097499058520805,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 1
+}

@@ -1,0 +1,46 @@
+{
+    "country": "South Africa",
+    "total_population": 59308690,
+    "max_days": 150,
+    "simulation": {
+        "n_simulations": 2000000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": -2,
+            "max": 20
+        },
+        "permeability": {
+            "min": 0.5618739669293711,
+            "max": 1
+        },
+        "lambda": {
+            "min": 0.03882360011141291,
+            "max": 0.048936942070037695
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.0625,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 0,
+            "max": 2.316376841634606e-08
+        }
+    },
+    "fixed_params": {
+        "home_size": 2.5,
+        "k_average_active": 15.916478666851711,
+        "k_average_confined": 3.944795717027912,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 3
+}

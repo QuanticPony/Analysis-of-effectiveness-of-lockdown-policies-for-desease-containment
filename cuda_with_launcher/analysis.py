@@ -1,7 +1,9 @@
 from math import floor, modf
 import matplotlib.pyplot as plt
-from configuration import open_save_files
-from simulation_functions import *
+import pandas
+from .configuration import open_save_files
+from .simulation_functions import *
+import seaborn
 
 def median(array):
     return percentil(array, 50)
@@ -14,8 +16,19 @@ def percentil(array, i):
         return array[complete+1]
     return (array[complete] + array[complete+1])/2
 
+def correlations(params, n_bins, log_diff, country, with_seaborn=False):
+    if with_seaborn:
+        db = pandas.DataFrame(columns=param_to_index.keys())
+        for p in param_to_index:
+            db[p] = params[param_to_index[p]]
 
-def correlations(params, n_bins, log_diff, country):
+        g = seaborn.PairGrid(db, corner=True, diag_sharey=False)
+        g.map_lower(seaborn.kdeplot, levels=4, color=".2")
+        # g.map_upper(seaborn.histplot)
+        g.map_diag(seaborn.kdeplot)
+        g.savefig(f'images\images_by_country\{country}\correlations.png')
+        return
+    
     from matplotlib.ticker import NullFormatter
     
     for i_n, i in param_to_index.items():
@@ -88,7 +101,9 @@ def correlations(params, n_bins, log_diff, country):
                 plt.close(fig)
 
 
-def plot_the_plots(country, max_days, *, save_pictures=True):
+
+
+def plot_the_plots(country, *, save_pictures=True, only_correlations=False, with_seaborn=False):
         
     files = open_save_files(country, mode='r')
     
@@ -102,10 +117,10 @@ def plot_the_plots(country, max_days, *, save_pictures=True):
         for i, value in enumerate(files[k]):
             params[param_to_index[k], i] = np.float64(value)
     for i,value in enumerate(files['log_diff']):
-        log_diff[i] = 1/np.float64(value)
+        log_diff[i] = np.float64(value)
             
-    if save_pictures:
-        correlations(params, 30, log_diff, country)
+    if save_pictures or only_correlations:
+        correlations(params, 30, log_diff, country, with_seaborn=with_seaborn)
 
     percentiles = {}
                 
@@ -184,6 +199,6 @@ def plot_the_plots(country, max_days, *, save_pictures=True):
         
 if __name__=='__main__':
     
-    COUNTRY = 'Switzerland'
+    COUNTRY = 'Spain'
     MAX_DAYS = 60
-    plot_the_plots(COUNTRY, MAX_DAYS)
+    plot_the_plots(COUNTRY, only_correlations=True)

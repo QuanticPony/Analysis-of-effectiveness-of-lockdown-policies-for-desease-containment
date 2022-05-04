@@ -1,15 +1,14 @@
 Antigua and Barbuda
-Argentina
 Bahamas
 Bahrain
 Belarus
 Belize
+Brazil
 Benin
 Bosnia and Herzegovina
 Botswana
-Bulgaria
 Burkina Faso
-Cabo Verde
+Cabo Verdes
 Cambodia
 Cameroon
 Costa Rica
@@ -18,7 +17,9 @@ Czech Republic
 Denmark
 El Salvador 
 Fiji
+Finland
 Georgia
+Germany
 Ghana
 Haiti
 India
@@ -57,3 +58,11 @@ Viet Nam
 Yemen
 Zambia
 Zimbabwe
+Australia
+Dominican Republic
+Ecuador
+Kazakhstan
+Niger
+Serbia
+Slovenia
+El Salvador

@@ -5,10 +5,10 @@ param_to_index = {
     'permeability' : 0,
     'lambda' : 1,
     'IFR' : 2,
-    'what' : 3,
-    'initial_i' : 4,
+    'initial_i' : 3,
+    'offset' : 4,
+    'what' : 5,
     # 'mu' : 5,
-    'offset' : 5,
 }
 
 fixed_params_to_index = {
@@ -16,7 +16,7 @@ fixed_params_to_index = {
     'k_average_active' : 1,
     'k_average_confined' : 2,
     'mu' : 3,
-    'eta' : 4,
+    'eta' : 4
 }
 
 all_params = [

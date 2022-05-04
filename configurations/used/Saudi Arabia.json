@@ -1,0 +1,46 @@
+{
+    "country": "Saudi Arabia",
+    "total_population": 34813871,
+    "max_days": 130,
+    "simulation": {
+        "n_simulations": 2000000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": -2,
+            "max": 20
+        },
+        "permeability": {
+            "min": 0,
+            "max": 1
+        },
+        "lambda": {
+            "min": 0.01,
+            "max": 0.05345596466208867
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.0625,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 0,
+            "max": 3.2396483817360266e-07
+        }
+    },
+    "fixed_params": {
+        "home_size": 2.5,
+        "k_average_active": 15.639997080431902,
+        "k_average_confined": 4.102576148447628,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 3
+}

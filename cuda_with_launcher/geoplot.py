@@ -1,9 +1,12 @@
+#%%
 import geopandas as gp
+import pandas as pd
 import matplotlib.pyplot as plt
-import configuration
-import parameters_control
-import analysis
+from . import parameters_control
+from . import analysis
 import numpy as np
+from .configuration import get_all_countries
+import seaborn
 
 def crear_gp_world():
     # world_filepath = gp.datasets.get_path('naturalearth_lowres')
@@ -11,6 +14,22 @@ def crear_gp_world():
     world = gp.read_file("real_data/gp_world_ref.csv", GEOM_POSSIBLE_NAMES="geometry", KEEP_GEOM_COLUMNS="NO")
 
     dict_ = {param:0 for param in parameters_control.all_params}
+
+    world = world.assign(**dict_)
+
+    #! Por si tengo que borrar alguna columna
+    # df.drop(['column_name1', 'column_name2'], axis=1, inplace=True)
+
+    with open("real_data/gp_world.csv", 'w') as file:
+        world.to_csv(file)
+        
+
+def crear_gp_world_gdp():
+    # world_filepath = gp.datasets.get_path('naturalearth_lowres')
+    # world = gp.read_file(world_filepath)
+    world = gp.read_file("real_data/gp_world.csv", GEOM_POSSIBLE_NAMES="geometry", KEEP_GEOM_COLUMNS="NO")
+
+    dict_ = {param:0 for param in ['gdp', 'gdp_nominal']}
 
     world = world.assign(**dict_)
 
@@ -30,10 +49,23 @@ def save_geo_frame(frame):
 
 
 def update_geo_frame(frame):
+    all_countries = get_all_countries()
+    world_gdp = pd.read_csv("real_data/gp_world_gdp_capita.csv")
+    
     for c in frame['name']:
+        if c not in all_countries:
+            for v in parameters_control.all_params+['gdp', 'gdp_nominal']:
+                frame.loc[lambda w: w['name']==c, v] = np.nan
+            continue
+        
         for v in parameters_control.all_params:
             frame.loc[lambda w: w['name']==c, v] = np.nan
-
+        for v in ['gdp', 'gdp_nominal']:
+            try:
+                frame.loc[lambda w: w['name']==c, v] = float(world_gdp.loc[lambda w: w['name']==c, v])
+            except Exception as e:
+                print(c)
+                frame.loc[lambda w: w['name']==c, v] = np.nan
         try:
             files = analysis.open_save_files(c, erase_prev=False, mode='r')
         except FileNotFoundError:
@@ -64,19 +96,73 @@ def update_geo_frame(frame):
     frame['permeability']   = frame['permeability'].astype('float64', errors='ignore')
     frame['recovered']      = frame['recovered'].astype('float64', errors='ignore')
     frame['what']           = frame['what'].astype('float64', errors='ignore')
+    frame['gdp']           = frame['gdp'].astype('float64', errors='ignore')
+    frame['gdp_nominal']           = frame['gdp_nominal'].astype('float64', errors='ignore')
     return frame
 
 
-
+#%%
 if __name__=='__main__':
-    # crear_gp_world()
+    # crear_gp_world_gdp()
 
     world = read_geo_frame()
     world = update_geo_frame(world)
-    save_geo_frame(world)
+    # save_geo_frame(world)
+    # exit()
 
-    world.plot('permeability', cmap='viridis', legend=True, figsize=(12,8), missing_kwds={'color': 'lightgrey'})
+    # world.plot('permeability', cmap='viridis', legend=True, figsize=(12,8), missing_kwds={'color': 'lightgrey'})
     # plt.title('World Population')
+
+    
+    corr = world.corr('pearson') 
+    # fig, ax = plt.subplots(figsize=(10,10))
+
+    # corr.style.background_gradient(cmap='coolwarm')
+    w_p = world[["IFR", "lambda", "permeability", "gdp_md_est", "initial_i", "offset", "what"]]
+    # seaborn.heatmap(corr, cmap="coolwarm", annot=True, ax=ax, square=True)
+    g = seaborn.pairplot(w_p, diag_kind='kde', corner=True)
+    g.map_lower(seaborn.kdeplot, levels=4, color=".2")
+    # ax.set_xticks(range(corr.select_dtypes(['number']).shape[1]), corr.select_dtypes(['number']).columns, fontsize=14, rotation=45)
+    # ax.set_yticks(range(corr.select_dtypes(['number']).shape[1]), corr.select_dtypes(['number']).columns, fontsize=14)
+
+    # ax.set_title("Correlación Pearson")
+
+
+
+
+    # df = gp.read_file(gp.datasets.get_path("naturalearth_lowres"))
+    # df.plot('pop_est', cmap='viridis', legend=True, figsize=(12,8))
+
+    # print(world.head())
+    # print(df.head())
+
+    plt.show()
+    
+
+    
+    
+    fig, ax = plt.subplots()
+        
+    ax.tick_params(left=True,
+                bottom=True,
+                labelleft=True,
+                labelbottom=True)
+    
+    x = 'gdp_nominal'
+    y = 'permeability'
+    
+    
+    # ax.hist(world['offset'])
+#%%
+    for index, row in world.iterrows():
+        if not np.isnan(row[y]):
+            ax.scatter(row[x], row[y], s=min(world['log_diff']/float(row["log_diff"])))
+            ax.annotate(row["name"], (row[x], row[y]))
+    ax.set_title(f"Permeabilidad frente a GDP")
+    ax.set_xlabel(x)
+    ax.set_ylabel(y)
+    
+    
 
     
 

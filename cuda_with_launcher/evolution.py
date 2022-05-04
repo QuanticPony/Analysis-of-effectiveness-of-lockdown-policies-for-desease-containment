@@ -1,6 +1,6 @@
 import cupy as cp
 
-from parameters_control import param_to_index, fixed_params_to_index
+from .parameters_control import param_to_index, fixed_params_to_index
     
 def P_home_is_secure(params, fixed_params, state):
     'pow((1 - i), sigma - 1)'
@@ -25,6 +25,8 @@ def evolve(params, fixed_params, state, p_active):
     eta = fixed_params[fixed_params_to_index['eta']]
     # eta = params[param_to_index['eta']]
     mu = fixed_params[fixed_params_to_index['mu']]
+    # what = fixed_params[fixed_params_to_index['what']]
+    what = params[param_to_index['what']]
 
     S = state[0] + state[1]
 
@@ -41,7 +43,7 @@ def evolve(params, fixed_params, state, p_active):
 
     # d
     # pd * what
-    state[5] = state[4] * params[3]
+    state[5] = state[4] * what
 
     # r
     # (1-IFR)mu * i
@@ -49,7 +51,7 @@ def evolve(params, fixed_params, state, p_active):
 
     # pd
     # mu*IFR*i + pd*(1-what)
-    state[4] = mu*params[2]*state[3] + state[4]*(1-params[3])
+    state[4] = mu*params[2]*state[3] + state[4]*(1-what)
 
     # i
     # e*eta + i*(1-mu)

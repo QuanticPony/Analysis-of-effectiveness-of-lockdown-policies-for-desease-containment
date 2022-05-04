@@ -1,8 +1,12 @@
-from configuration import *
-from parameters_control import *
-from simulation_functions import *
-from plots_funtions import *
-from analysis import *
+from .configuration import *
+from .parameters_control import *
+from .simulation_functions import *
+from .plots_funtions import *
+from .analysis import *
+
+def progress_bar(country, progress, total, *, end='\r'):
+    per = 10 * progress/float(total)
+    print(f"\r{country} -> ||{'▮'*int(per) + '▯'*(10-int(per))} ||{per*10:.2f}%", end=end)
 
 
 def main(configuration, save_data: bool, analyze_data: bool, erase_prev_data: bool, save_percentage: float, name="", save_pictures=False):
@@ -64,4 +68,4 @@ def main(configuration, save_data: bool, analyze_data: bool, erase_prev_data: bo
 
     ## Histogramas y correlaciones
     if analyze_data:
-        return plot_the_plots(country, configuration["max_days"], save_pictures=save_pictures)
+        return plot_the_plots(country, save_pictures=save_pictures)

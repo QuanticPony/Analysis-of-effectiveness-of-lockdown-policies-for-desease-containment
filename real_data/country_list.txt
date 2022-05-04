@@ -1,19 +1,14 @@
-Australia
 Austria
+Argentina
 Bangladesh
 Belgium
 Bolivia (Plurinational State of
-Brazil
+Bulgaria
 Canada
 Chile
 Colombia
-Dominican Republic
-Ecuador
 Egypt
-Estonia
-Finland
 France
-Germany
 Greece
 Guatemala
 Honduras
@@ -24,27 +19,21 @@ Ireland
 Israel
 Italy
 Japan
-Kazakhstan
 Kuwait
 Luxembourg
 Malaysia
 Mexico
 Morocco
 Netherlands
-Niger
 Nigeria
-Oman
 Pakistan
 Panama
-Peru
 Philippines
 Poland
 Portugal
 Romania
 Russian Federation
 Saudi Arabia
-Serbia
-Slovenia
 South Africa
 Spain
 Sweden
@@ -54,4 +43,3 @@ United States of America
 Ukraine
 United Arab Emirates
 United Kingdom of Great Britain
-El Salvador

@@ -1,0 +1,46 @@
+{
+    "country": "Bolivia (Plurinational State of",
+    "total_population": 11673021,
+    "max_days": 150,
+    "simulation": {
+        "n_simulations": 1500000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 7.1000000000000005,
+            "max": 20
+        },
+        "permeability": {
+            "min": 0.7391095356407136,
+            "max": 1
+        },
+        "lambda": {
+            "min": 0.05110868663977886,
+            "max": 0.0690659762664722
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.0625,
+            "max": 0.07656271845606462
+        },
+        "initial_i": {
+            "min": 0,
+            "max": 5.611314798288014e-09
+        }
+    },
+    "fixed_params": {
+        "home_size": 2.5,
+        "k_average_active": 17.03589428678526,
+        "k_average_confined": 3.029082531014989,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 3
+}

@@ -6,3 +6,6 @@ Primer código para ver como funciona el modelo. Contiene plots interactivos par
 Primera implementación del modelo en c++. Solo calcula una única trayectoria. Cosas a mejorar:
 *   Cálculo de varias trayectorias en paralelo
 *   Kernel en python?
+
+#! TODO: mirar
+https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002803

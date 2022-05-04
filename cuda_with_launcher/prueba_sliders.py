@@ -1,18 +1,21 @@
-from tkinter.tix import MAX
 import matplotlib.pyplot as plt
 
-from simulation_functions import *
+from .simulation_functions import *
+from .configuration import *
+from .parameters_control import *
 
 if __name__=='__main__':
     
-    COUNTRY = 'Spain'
-    MAX_DAYS = 90
-    TOTAL_POPULATION = 47.5e6
-    # N_SIMULATIONS = 100000
-    # N_EXECUTIONS = 20
+    COUNTRY = 'Colombia'
+    MAX_DAYS = 180
+    TOTAL_POPULATION = 50882891
+
 
     fixed_params = cp.zeros(5, dtype=cp.float64)
-    set_fixed_params(fixed_params, COUNTRY)
+    
+    configuration = read_configuration(COUNTRY, prefix='used/', sufix='')
+    p_controller = Params_Manager(configuration)
+    p_controller.set_fixed_params(fixed_params)
     
     deaths_list = load_deaths_list(COUNTRY)
     deaths_list_smooth = smooth_deaths_list(deaths_list)
@@ -29,12 +32,11 @@ if __name__=='__main__':
     # s.add_slider('what', valinit=0.07, valinterval=[0,0.2], valstep=0.001)
     # s.add_slider('initial_i', valinit=1e-13, valinterval=[0, 0.001/TOTAL_POPULATION], valstep=0.00001/(TOTAL_POPULATION))
         
-    s.add_slider('permability', valinit=0.04, valinterval=[0,0.20], valstep=0.001)
-    s.add_slider('lambda', valinit=0.60, valinterval=[0.05,0.12], valstep=0.001)
-    s.add_slider('IFR', valinit=0.00955, valinterval=[0.009,0.01], valstep=0.0001)
-    s.add_slider('what', valinit=0.08, valinterval=[1/28,1/6], valstep=0.0001)
-    s.add_slider('first_i', valinit=-5, valinterval=[-10, 0], valstep=1)
-    # s.add_slider('mu', valinit=0.3, valinterval=[0.1, 0.5], valstep=0.01)
+    for k in param_to_index:    
+        s.add_slider(k, valinit=configuration['params'][k]['min'], 
+                     valinterval=[configuration['params'][k]['min'],
+                                  configuration['params'][k]['max']], 
+                     valstep=(configuration['params'][k]['max'] -configuration['params'][k]['min'])/100)
         
     s.plot()
     plt.show()

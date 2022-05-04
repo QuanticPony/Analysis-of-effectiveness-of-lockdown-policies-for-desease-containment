@@ -6,11 +6,13 @@ import cupy as cp
 import matplotlib.pyplot as plt
 import pandas
 
-
 ## Funciones específicas
 
-def str_to_date(string, *, strange=False):
+def str_to_date(string, *, strange=False, v2=False):
+    if v2:
+        return datetime.date.fromisoformat(string)
     _d = string.split('/')
+
     if strange:
         return datetime.date(int(_d[2])+2000, int(_d[0]), int(_d[1]))
     return datetime.date(int(_d[0]), int(_d[1]), int(_d[2]))
@@ -40,17 +42,23 @@ def date_to_spanish(date):
     return '\n'.join([month[a],b])
 
 
-def prepare_deaths_list(requested_country):
+def prepare_deaths_list(requested_country, v2=False):
     "Returns tuple: `(deaths_list, first_day_deaths_list, lenght_deaths_list)`."
-    deaths_complete_db = pandas.read_csv(r'real_data\Deaths_worldwide_1Aug.csv')
+    deaths_complete_db = pandas.read_csv(f'./real_data/Deaths_worldwide_1Aug{"_v2" if v2 else ""}.csv')
     deaths_partial_db = deaths_complete_db[deaths_complete_db['Country']==requested_country]
+    
+    DATE = "Date" if not v2 else "Date_reported"
 
-    first_day_deaths_list = str_to_date(deaths_partial_db['Date'].values[0], strange=True)
-    lenght_deaths_list = deaths_partial_db['Date'].size
+    first_day_deaths_list = str_to_date(deaths_partial_db[DATE].values[0], strange=True, v2=v2)
+    lenght_deaths_list = deaths_partial_db[DATE].size
 
     deaths_list = cp.zeros(lenght_deaths_list, dtype=cp.int32)
-    for _country, date, _cumdeath, death in deaths_partial_db.values:
-        deaths_list[(str_to_date(date, strange=True)-first_day_deaths_list).days] = death
+    if not v2:
+        for _country, date, _cumdeath, death in deaths_partial_db.values:
+            deaths_list[(str_to_date(date, strange=True, v2=v2)-first_day_deaths_list).days] = death
+    else:
+        for date, _country_code, _country, _WHO_region, _New_cases, _Cumulative_cases, death, _Cumulative_deaths in deaths_partial_db.values:
+            deaths_list[(str_to_date(date, strange=True, v2=v2)-first_day_deaths_list).days] = death
     return (deaths_list, first_day_deaths_list, lenght_deaths_list)
     
 
@@ -137,8 +145,8 @@ def load_p_active(requested_country):
 ## Funciones más generales
 
 
-def prepare_deaths_p_active(country: str, plot=False):
-    (deaths_list, first_deaths_list_day, deaths_list_lenght) =  prepare_deaths_list(country)
+def prepare_deaths_p_active(country: str, plot=False, v2=False):
+    (deaths_list, first_deaths_list_day, deaths_list_lenght) =  prepare_deaths_list(country, v2=v2)
     
     save_deaths_list(country, deaths_list)
     
@@ -158,7 +166,7 @@ def prepare_deaths_p_active(country: str, plot=False):
     return first_deaths_list_day
 
 
-def generate_configuration(country: str, *, data_location='real_data'):
+def generate_configuration(country: str, *, data_location='real_data', sufix='_ref', prefix=''):
     if country in ["Venezuela (Bolivarian Republic "]:
         return False
 
@@ -192,34 +200,36 @@ def generate_configuration(country: str, *, data_location='real_data'):
             'k_average_confined' : float(k_conf_db[k_conf_db['Country']==country]['kaverage']),
             'mu' : 1/4.2,
             'eta' : 1/5.2,
-        }
+        },
+        "first_day_deaths_list": "2020-01-22",
+        "min_days": 0
     }
 
-    filename = f"configurations/{country}.json" 
+    filename = f"configurations/{prefix}{country}{sufix}.json" 
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, 'w') as fp:
         json.dump(conf, fp, indent=4)
     return True
 
 
-def read_configuration(country: str, print_config=False, sufix='_ref'):
-    filename = f"configurations/{country}{sufix}.json" 
+def read_configuration(country: str, print_config=False, sufix='_ref', prefix='', v2=False):
+    filename = f"configurations/{prefix}{country}{sufix}.json" 
     try:
         with open(filename, 'r') as fp:
             conf = json.load(fp)
             if print_config:
                 print(conf)
     except Exception as e:
-        prepare_deaths_p_active(country, plot=False)
-        f = generate_configuration(country)
+        prepare_deaths_p_active(country, plot=False, v2=v2)
+        f = generate_configuration(country, sufix='_ref', prefix='')
         if f:
             return read_configuration(country, print_config=print_config)
         return
     return conf
 
 
-def save_configuration(configuration, sufix='_new'):
-    filename = f"configurations/{configuration['country']}{sufix}.json" 
+def save_configuration(configuration, sufix='_new', prefix=''):
+    filename = f"configurations/{prefix}{configuration['country']}{sufix}.json" 
     with open(filename, 'w') as fp:
         json.dump(configuration, fp, indent=4)
 
@@ -227,7 +237,7 @@ def save_configuration(configuration, sufix='_new'):
 
 def open_save_files(country: str, *, erase_prev=True, mode=None) -> dict:
     """Open files needed for saving data generated. Returns dict with open files""" 
-    from simulation_functions import param_to_index
+    from .simulation_functions import param_to_index
     
     _mode = 'w' if erase_prev else 'a'
     if mode is not None:
@@ -253,6 +263,54 @@ def get_all_countries(data_location='real_data/'):
         for line in file:
             countries_list.append(line.strip('\n'))
     return countries_list
+
+
+
+def restart_permeability(config):
+    config["params"]["permeability"]["min"] = 0
+    config["params"]["permeability"]["max"] = 1
+
+def restart_lambda(config):
+    config["params"]["lambda"]["min"] = 0.01
+    config["params"]["lambda"]["max"] = 0.20
+
+
+def restart_offset(config):
+    config["params"]["offset"]["min"] = 0
+    config["params"]["offset"]["max"] = 20
+    
+def restart_what(config):
+    config["params"]["what"]["min"] = 0.0625
+    config["params"]["what"]["max"] = 0.16666666666666666
+
+def update_configuration(config, config_ref, percentiles):
+    for k, v in percentiles.items():
+        distm = v["med"] - v["min"]
+        distM = v["max"] - v["med"]
+        dist = (distm + distM)/2
+        
+        if k in ['lambda', 'IFR', 'what']:
+            config["params"][k]["min"] = max(v["min"] - dist*(distM/distm), config_ref["params"][k]["min"])
+            config["params"][k]["max"] = min(v["max"] + dist*(distm/distM), config_ref["params"][k]["max"])
+
+        elif k=="offset":
+            config["params"][k]["min"] = max(v["min"] - 1 - dist*(distM/distm+1), config_ref["params"][k]["min"])
+            config["params"][k]["max"] = min(v["max"] + 1 + dist*(distm/distM+1), config_ref["params"][k]["max"])
+
+
+        elif k=="permeability":
+            config["params"][k]["min"] = max(v["min"] - dist*(distM/distm), 0)
+            config["params"][k]["max"] = min(v["max"] + dist*(distm/distM), 1)    
+        
+        elif k=="initial_i":
+            config["params"][k]["min"] = max(v["med"] - 5*dist*(distM/distm), 0)
+            config["params"][k]["max"] = v["med"] + 5*dist*(distm/distM)
+        
+        else:
+            # config["params"][k]["min"] = max(v["min"] - 2*dist*(distM/distm), config_ref["params"][k]["min"])
+            # config["params"][k]["max"] = min(v["max"] + 2*dist*(distm/distM), config_ref["params"][k]["max"])
+            config["params"][k]["min"] = v["min"] - dist*(distM/distm)
+            config["params"][k]["max"] = v["max"] + dist*(distm/distM)
 
 
 if __name__=='__main__':

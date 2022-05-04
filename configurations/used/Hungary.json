@@ -1,0 +1,46 @@
+{
+    "country": "Hungary",
+    "total_population": 9660351,
+    "max_days": 100,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 13.75,
+            "max": 20
+        },
+        "permeability": {
+            "min": 0,
+            "max": 0.149326410890346
+        },
+        "lambda": {
+            "min": 0.0413431142157691,
+            "max": 0.05613619953541618
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.11331310457080249,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 0,
+            "max": 4.963963970844823e-06
+        }
+    },
+    "fixed_params": {
+        "home_size": 2.5,
+        "k_average_active": 12.068153134063971,
+        "k_average_confined": 3.4601398527982563,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 1
+}

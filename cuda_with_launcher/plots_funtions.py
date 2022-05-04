@@ -4,10 +4,10 @@ import datetime
 import cupy as cp
 import matplotlib.pyplot as plt
 import numpy as np
-from configuration import date_to_spanish
+from .configuration import date_to_spanish
 
-from evolution import *
-from parameters_control import *
+from .evolution import *
+from .parameters_control import *
 
 def prepare_states(params, total_population):
     "Creates and returns `state` from given `params`"
@@ -163,7 +163,7 @@ def plot_percentiles(params, fixed_params, state, deaths_list, p_active, max_day
     
     while time < max_days:
         evolve(params, fixed_params, state, time, p_active)
-        copy_deaths = (state[5].get()*N).copy()
+        copy_deaths = (state[5].get()*total_population).copy()
         copy_deaths.sort()
         percentil(copy_deaths, 5)
         time+=1
