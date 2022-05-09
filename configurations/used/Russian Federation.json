@@ -3,21 +3,21 @@
     "total_population": 145934462,
     "max_days": 100,
     "simulation": {
-        "n_simulations": 2000000,
+        "n_simulations": 1300000,
         "n_executions": 1
     },
     "params": {
         "offset": {
-            "min": -2,
-            "max": 20
+            "min": 8.75,
+            "max": 19.5
         },
         "permeability": {
             "min": 0,
-            "max": 1
+            "max": 0.8859287094441798
         },
         "lambda": {
-            "min": 0.0262232324300317,
-            "max": 0.06557175545355957
+            "min": 0.04294598442642483,
+            "max": 0.06352873105310973
         },
         "IFR": {
             "min": 0.007,
@@ -29,7 +29,7 @@
         },
         "initial_i": {
             "min": 0,
-            "max": 1.4407097376535893e-07
+            "max": 7.80238910468335e-08
         }
     },
     "fixed_params": {

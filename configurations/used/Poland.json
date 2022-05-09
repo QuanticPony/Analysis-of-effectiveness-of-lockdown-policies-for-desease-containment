@@ -3,33 +3,33 @@
     "total_population": 37846611,
     "max_days": 110,
     "simulation": {
-        "n_simulations": 2000000,
+        "n_simulations": 1300000,
         "n_executions": 1
     },
     "params": {
         "offset": {
-            "min": -2,
+            "min": 16.5,
             "max": 20
         },
         "permeability": {
             "min": 0,
-            "max": 1
+            "max": 0.14015375647086514
         },
         "lambda": {
-            "min": 0.024621391797839013,
-            "max": 0.05955821547739707
+            "min": 0.02809320068641109,
+            "max": 0.04914726210298272
         },
         "IFR": {
             "min": 0.007,
             "max": 0.013
         },
         "what": {
-            "min": 0.0625,
+            "min": 0.08614356928018665,
             "max": 0.16666666666666666
         },
         "initial_i": {
             "min": 0,
-            "max": 1.4585242766763978e-06
+            "max": 5.507815388692899e-06
         }
     },
     "fixed_params": {
@@ -42,5 +42,5 @@
     },
     "first_day_deaths_list": "2020-01-22",
     "min_days": 0,
-    "score": 1
+    "score": 2
 }

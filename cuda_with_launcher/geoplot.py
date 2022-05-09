@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from . import parameters_control
 from . import analysis
 import numpy as np
-from .configuration import get_all_countries
+from .configuration import get_all_countries, read_configuration
 import seaborn
 
 def crear_gp_world():
@@ -54,15 +54,20 @@ def update_geo_frame(frame):
     
     for c in frame['name']:
         if c not in all_countries:
-            for v in parameters_control.all_params+['gdp', 'gdp_nominal']:
+            frame.loc[lambda w: w['name']==c, "score"] = np.nan
+            for v in parameters_control.all_params+['gdp','gdp_capita', 'gdp_nominal']:
                 frame.loc[lambda w: w['name']==c, v] = np.nan
+            for v in parameters_control.all_params:
+                frame.loc[lambda w: w['name']==c, v+'_err'] = np.nan
             continue
         
         for v in parameters_control.all_params:
+            frame.loc[lambda w: w['name']==c, "score"] = np.nan
             frame.loc[lambda w: w['name']==c, v] = np.nan
-        for v in ['gdp', 'gdp_nominal']:
+            frame.loc[lambda w: w['name']==c, v+'_err'] = np.nan
+        for v in ['gdp', 'gdp_capita', 'gdp_nominal']:
             try:
-                frame.loc[lambda w: w['name']==c, v] = float(world_gdp.loc[lambda w: w['name']==c, v])
+                frame.loc[lambda w: w['name']==c, v] = float(world_gdp.loc[lambda w: w['Country']==c, v])
             except Exception as e:
                 print(c)
                 frame.loc[lambda w: w['name']==c, v] = np.nan
@@ -81,6 +86,10 @@ def update_geo_frame(frame):
 
             if len(v_array) > 0:
                 frame.loc[lambda w: w['name']==c, v] = analysis.median(v_array)
+                frame.loc[lambda w: w['name']==c, v+"_err"] = v_array.std()
+
+        config = read_configuration(c, prefix="used/", sufix='', v2=True)
+        frame.loc[lambda w: w['name']==c, "score"] = config["score"]
 
     frame['field_1']        = frame['field_1'].astype('int64', errors='ignore')
     frame['pop_est']        = frame['pop_est'].astype('int64', errors='ignore')
@@ -96,8 +105,9 @@ def update_geo_frame(frame):
     frame['permeability']   = frame['permeability'].astype('float64', errors='ignore')
     frame['recovered']      = frame['recovered'].astype('float64', errors='ignore')
     frame['what']           = frame['what'].astype('float64', errors='ignore')
-    frame['gdp']           = frame['gdp'].astype('float64', errors='ignore')
-    frame['gdp_nominal']           = frame['gdp_nominal'].astype('float64', errors='ignore')
+    frame['gdp']            = frame['gdp'].astype('float64', errors='ignore')
+    frame['gdp_nominal']    = frame['gdp_nominal'].astype('float64', errors='ignore')
+    frame['gdp_capita']     = frame['gdp_capita'].astype('float64', errors='ignore')
     return frame
 
 
@@ -118,7 +128,7 @@ if __name__=='__main__':
     # fig, ax = plt.subplots(figsize=(10,10))
 
     # corr.style.background_gradient(cmap='coolwarm')
-    w_p = world[["IFR", "lambda", "permeability", "gdp_md_est", "initial_i", "offset", "what"]]
+    w_p = world[["gdp_capita", "permeability", "offset"]]
     # seaborn.heatmap(corr, cmap="coolwarm", annot=True, ax=ax, square=True)
     g = seaborn.pairplot(w_p, diag_kind='kde', corner=True)
     g.map_lower(seaborn.kdeplot, levels=4, color=".2")

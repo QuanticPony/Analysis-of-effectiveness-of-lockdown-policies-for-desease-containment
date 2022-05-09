@@ -248,8 +248,8 @@ def open_save_files(country: str, *, erase_prev=True, mode=None) -> dict:
         filename = f"generated_data/data_by_country/{country}/{k}.dat" 
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         files.update({k: open(filename, _mode)})
-    files.update({'log_diff': open(f"generated_data\data_by_country/{country}/log_diff.dat", _mode)})
-    files.update({'recovered': open(f"generated_data\data_by_country/{country}/recovered.dat", _mode)})
+    files.update({'log_diff': open(f"generated_data/data_by_country/{country}/log_diff.dat", _mode)})
+    files.update({'recovered': open(f"generated_data/data_by_country/{country}/recovered.dat", _mode)})
 
     return files
 
@@ -294,8 +294,8 @@ def update_configuration(config, config_ref, percentiles):
             config["params"][k]["max"] = min(v["max"] + dist*(distm/distM), config_ref["params"][k]["max"])
 
         elif k=="offset":
-            config["params"][k]["min"] = max(v["min"] - 1 - dist*(distM/distm+1), config_ref["params"][k]["min"])
-            config["params"][k]["max"] = min(v["max"] + 1 + dist*(distm/distM+1), config_ref["params"][k]["max"])
+            config["params"][k]["min"] = max(v["min"] - 1 - dist*(distM/(distm+1)), config_ref["params"][k]["min"])
+            config["params"][k]["max"] = min(v["max"] + 1 + dist*(distm/(distM+1)), config_ref["params"][k]["max"])
 
 
         elif k=="permeability":

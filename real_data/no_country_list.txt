@@ -24,6 +24,7 @@ Ghana
 Haiti
 India
 Jamaica
+Japan
 Jordan
 Kenya
 Kyrgyzstan
@@ -36,6 +37,7 @@ Mauritius
 Mongolia
 Mozambique
 Namibia
+Netherlands
 Nepal
 New Zealand
 Nicaragua
@@ -46,6 +48,7 @@ Senegal
 Singapore
 Slovakia
 Sri Lanka
+Sweden
 Tajikistan
 Thailand
 Uganda

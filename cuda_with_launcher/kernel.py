@@ -4,9 +4,9 @@ from .simulation_functions import *
 from .plots_funtions import *
 from .analysis import *
 
-def progress_bar(country, progress, total, *, end='\r'):
-    per = 10 * progress/float(total)
-    print(f"\r{country} -> ||{'▮'*int(per) + '▯'*(10-int(per))} ||{per*10:.2f}%", end=end)
+def progress_bar(prefix, progress, total, *, sufix="", end='\r', len=10):
+    per = len * progress/float(total)
+    print(f"\r{prefix} -> ||{'▮'*int(per) + '▯'*(len-int(per))} ||{per*100/len:.2f}%  {sufix}", end=end)
 
 
 def main(configuration, save_data: bool, analyze_data: bool, erase_prev_data: bool, save_percentage: float, name="", save_pictures=False):

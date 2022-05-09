@@ -18,13 +18,11 @@ Iraq
 Ireland
 Israel
 Italy
-Japan
 Kuwait
 Luxembourg
 Malaysia
 Mexico
 Morocco
-Netherlands
 Nigeria
 Pakistan
 Panama
@@ -36,7 +34,6 @@ Russian Federation
 Saudi Arabia
 South Africa
 Spain
-Sweden
 Switzerland
 Turkey
 United States of America
