@@ -1,3 +1,4 @@
+from cuda_with_launcher.analysis import plot_the_plots
 from cuda_with_launcher.kernel import main, progress_bar
 from cuda_with_launcher.configuration import read_configuration, restart_lambda, restart_offset, restart_permeability, restart_what, save_configuration, get_all_countries, update_configuration
 
@@ -16,7 +17,10 @@ if __name__=='__main__':
     HALF_RE_PARAMETRIZATION = False
     
     all_countries = get_all_countries()
-    all_countries = ["Morocco"]
+    all_countries = ["Spain"]
+
+    plot_the_plots(all_countries[0])
+    exit()
 
 
     for i, c in enumerate(all_countries):
