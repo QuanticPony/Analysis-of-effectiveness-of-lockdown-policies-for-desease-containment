@@ -1,0 +1,46 @@
+{
+    "country": "Mexico",
+    "total_population": 128932753,
+    "max_days": 180,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 18.0,
+            "max": 20
+        },
+        "permeability": {
+            "min": 0,
+            "max": 0.4370283661521965
+        },
+        "lambda": {
+            "min": 0.032391358012658154,
+            "max": 0.04532677704445625
+        },
+        "IFR": {
+            "min": 0.007160211888660008,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.0625,
+            "max": 0.10644664191171224
+        },
+        "initial_i": {
+            "min": 9.186384008576407e-08,
+            "max": 6.4581055274567755e-06
+        }
+    },
+    "fixed_params": {
+        "home_size": 3.7,
+        "k_average_active": 15.421936004513563,
+        "k_average_confined": 4.036690233405397,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 2
+}

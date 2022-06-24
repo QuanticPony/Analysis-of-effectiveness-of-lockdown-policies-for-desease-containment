@@ -1,9 +1,0 @@
-Para hacer comparaciones entre países:
-*   ¿Hasta qué etapa o cuánto tiempo debería de considerar en general para cada país? 
-    -   Uso de mascarillas/rastreo de contagios.
-    -   La primera ola de la pandemia llega a cada país a tiempos muy diferentes.
-
-
-Ejemplo:
-*   Alemania, Irlanda, Suecia: si tomo datos después del pico no consigo que ajuste.
-*   Honduras, Panamá, Mexico o Philipinas puedo ajustarlos hasta que me quedo sin datos.

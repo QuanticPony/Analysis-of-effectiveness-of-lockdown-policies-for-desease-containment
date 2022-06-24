@@ -1,0 +1,46 @@
+{
+    "country": "Greece",
+    "total_population": 10423054,
+    "max_days": 100,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 5.0,
+            "max": 7.0
+        },
+        "permeability": {
+            "min": 0,
+            "max": 0.011352322307136401
+        },
+        "lambda": {
+            "min": 0.06029771535270447,
+            "max": 0.06236491778799281
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.16160576513079866,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 1.0343439403849268e-08,
+            "max": 1.7115075966398052e-07
+        }
+    },
+    "fixed_params": {
+        "home_size": 2.4,
+        "k_average_active": 11.787158692188653,
+        "k_average_confined": 3.1777322890561424,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 3
+}

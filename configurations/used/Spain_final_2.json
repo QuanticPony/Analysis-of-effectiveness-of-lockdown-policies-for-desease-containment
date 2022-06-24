@@ -1,0 +1,50 @@
+{
+    "country": "Spain",
+    "total_population": 46754778,
+    "max_days": 90,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 3.0,
+            "max": 7.5
+        },
+        "permeability": {
+            "min": 0,
+            "max": 0.18978712177592655
+        },
+        "lambda": {
+            "min": 0.08124658950351489,
+            "max": 0.10806632167561882
+        },
+        "IFR": {
+            "min": 0.008,
+            "max": 0.012
+        },
+        "what": {
+            "min": 0.09818075368906085,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 3.5066212205020507e-09,
+            "max": 1.3628580293729837e-07
+        },
+        "eta": {
+            "min": 0.1,
+            "max": 0.4
+        }
+    },
+    "fixed_params": {
+        "home_size": 2.6,
+        "k_average_active": 12.018964433976906,
+        "k_average_confined": 3.187692531804087,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 3
+}

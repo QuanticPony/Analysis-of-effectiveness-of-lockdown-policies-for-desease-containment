@@ -1,0 +1,1 @@
+Configuraciones de los países usados en los ajustes. 

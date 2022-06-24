@@ -1,0 +1,46 @@
+{
+    "country": "Guatemala",
+    "total_population": 17915568,
+    "max_days": 160,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 14.0,
+            "max": 15
+        },
+        "permeability": {
+            "min": 0,
+            "max": 0.3151053046011528
+        },
+        "lambda": {
+            "min": 0.04504795771677744,
+            "max": 0.04961536936280132
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.0625,
+            "max": 0.16157054756784034
+        },
+        "initial_i": {
+            "min": 3.886566324646163e-11,
+            "max": 9.087467200825612e-10
+        }
+    },
+    "fixed_params": {
+        "home_size": 4.8,
+        "k_average_active": 18.98073830683683,
+        "k_average_confined": 4.081338755955492,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 2
+}

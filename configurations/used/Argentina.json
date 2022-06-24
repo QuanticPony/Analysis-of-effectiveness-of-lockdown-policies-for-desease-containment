@@ -33,7 +33,7 @@
         }
     },
     "fixed_params": {
-        "home_size": 2.5,
+        "home_size": 3.3,
         "k_average_active": 14.116284574031162,
         "k_average_confined": 3.838334220639105,
         "mu": 0.23809523809523808,

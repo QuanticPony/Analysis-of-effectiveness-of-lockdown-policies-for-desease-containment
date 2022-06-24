@@ -1,7 +1,7 @@
 {
     "country": "Bangladesh",
     "total_population": 164689383,
-    "max_days": 125,
+    "max_days": 130,
     "simulation": {
         "n_simulations": 1300000,
         "n_executions": 1

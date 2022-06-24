@@ -1,0 +1,46 @@
+{
+    "country": "Nigeria",
+    "total_population": 206139589,
+    "max_days": 150,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 18.0,
+            "max": 20
+        },
+        "permeability": {
+            "min": 0,
+            "max": 1
+        },
+        "lambda": {
+            "min": 0.022578851543008836,
+            "max": 0.029983916489871552
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.0625,
+            "max": 0.10542278687924521
+        },
+        "initial_i": {
+            "min": 2.4306403660361e-09,
+            "max": 8.777865251480333e-08
+        }
+    },
+    "fixed_params": {
+        "home_size": 4.6,
+        "k_average_active": 20.470588184821423,
+        "k_average_confined": 4.161159449483226,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 2
+}

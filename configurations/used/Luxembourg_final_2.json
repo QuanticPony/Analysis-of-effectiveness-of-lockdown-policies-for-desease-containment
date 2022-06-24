@@ -1,0 +1,46 @@
+{
+    "country": "Luxembourg",
+    "total_population": 625978,
+    "max_days": 100,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 7.5,
+            "max": 12.5
+        },
+        "permeability": {
+            "min": 0,
+            "max": 0.06733043969643716
+        },
+        "lambda": {
+            "min": 0.044461693545775796,
+            "max": 0.05155911995554209
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.12346945741641138,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 4.6645290230485055e-08,
+            "max": 1.0672178552310418e-06
+        }
+    },
+    "fixed_params": {
+        "home_size": 4.6,
+        "k_average_active": 16.374556317252853,
+        "k_average_confined": 3.4590991377495497,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 3
+}

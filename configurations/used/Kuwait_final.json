@@ -1,0 +1,46 @@
+{
+    "country": "Kuwait",
+    "total_population": 4270571,
+    "max_days": 150,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 4.75,
+            "max": 17.25
+        },
+        "permeability": {
+            "min": 0,
+            "max": 0.2968385816813719
+        },
+        "lambda": {
+            "min": 0.049537947171348566,
+            "max": 0.06579222561268347
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.07391092105162554,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 1.8230298291448338e-10,
+            "max": 1.2023466466925055e-08
+        }
+    },
+    "fixed_params": {
+        "home_size": 5.8,
+        "k_average_active": 16.420023901639695,
+        "k_average_confined": 4.160052264759305,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 3
+}

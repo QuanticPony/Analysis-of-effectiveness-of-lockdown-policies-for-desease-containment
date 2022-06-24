@@ -1,0 +1,46 @@
+{
+    "country": "Philippines",
+    "total_population": 109581078,
+    "max_days": 100,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 6.5,
+            "max": 13.5
+        },
+        "permeability": {
+            "min": 0,
+            "max": 0.9991138140793288
+        },
+        "lambda": {
+            "min": 0.03758017159491333,
+            "max": 0.04570162403656782
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.0625,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 1.8645853061956653e-09,
+            "max": 5.7837925161414884e-08
+        }
+    },
+    "fixed_params": {
+        "home_size": 4.7,
+        "k_average_active": 17.042748930133346,
+        "k_average_confined": 3.721832749073218,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 3
+}

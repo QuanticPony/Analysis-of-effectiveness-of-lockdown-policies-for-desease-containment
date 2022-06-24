@@ -1,0 +1,46 @@
+{
+    "country": "United Kingdom of Great Britain",
+    "total_population": 67886011,
+    "max_days": 105,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 1.5,
+            "max": 15
+        },
+        "permeability": {
+            "min": 0,
+            "max": 1
+        },
+        "lambda": {
+            "min": 0.05460416219640797,
+            "max": 0.15406727188085642
+        },
+        "IFR": {
+            "min": 0.008,
+            "max": 0.012
+        },
+        "what": {
+            "min": 0.08164935491546871,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 2.2249220443655e-09,
+            "max": 1.1945630258380955e-06
+        }
+    },
+    "fixed_params": {
+        "home_size": 2.3,
+        "k_average_active": 9.475115167626232,
+        "k_average_confined": 2.245642660835696,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 3
+}

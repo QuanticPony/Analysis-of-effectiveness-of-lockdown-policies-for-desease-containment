@@ -1,0 +1,46 @@
+{
+    "country": "Ireland",
+    "total_population": 4937786,
+    "max_days": 100,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 7.75,
+            "max": 18.5
+        },
+        "permeability": {
+            "min": 0,
+            "max": 0.204868980528225
+        },
+        "lambda": {
+            "min": 0.04195068220659845,
+            "max": 0.07504824658865225
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.08914034932934677,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 4.430998605387021e-08,
+            "max": 6.645424066495034e-06
+        }
+    },
+    "fixed_params": {
+        "home_size": 2.7,
+        "k_average_active": 12.469565788368415,
+        "k_average_confined": 3.4347630697388145,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 2
+}

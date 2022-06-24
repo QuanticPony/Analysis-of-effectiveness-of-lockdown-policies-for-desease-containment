@@ -1,0 +1,46 @@
+{
+    "country": "Honduras",
+    "total_population": 9904607,
+    "max_days": 160,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 15.5,
+            "max": 20
+        },
+        "permeability": {
+            "min": 0.4596907871665279,
+            "max": 1
+        },
+        "lambda": {
+            "min": 0.03128676705000708,
+            "max": 0.04601226739476627
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.0625,
+            "max": 0.11597229327330943
+        },
+        "initial_i": {
+            "min": 3.49361659275689e-09,
+            "max": 1.2843449074180425e-07
+        }
+    },
+    "fixed_params": {
+        "home_size": 3.9,
+        "k_average_active": 18.26819715043186,
+        "k_average_confined": 4.234564965049093,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 3
+}

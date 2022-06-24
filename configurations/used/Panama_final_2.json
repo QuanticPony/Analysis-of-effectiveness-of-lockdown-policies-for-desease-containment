@@ -1,0 +1,46 @@
+{
+    "country": "Panama",
+    "total_population": 4314767,
+    "max_days": 150,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 2.75,
+            "max": 13.5
+        },
+        "permeability": {
+            "min": 0.2878805050637559,
+            "max": 0.6341864087225618
+        },
+        "lambda": {
+            "min": 0.05210742467552216,
+            "max": 0.059702313197719535
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.06605440453613154,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 4.221406689431285e-09,
+            "max": 9.987470129233012e-08
+        }
+    },
+    "fixed_params": {
+        "home_size": 3.7,
+        "k_average_active": 14.62176742430789,
+        "k_average_confined": 3.454402218266738,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 3
+}

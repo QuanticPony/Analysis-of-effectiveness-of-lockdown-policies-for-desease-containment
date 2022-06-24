@@ -1,0 +1,46 @@
+{
+    "country": "Malaysia",
+    "total_population": 32365999,
+    "max_days": 90,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 0,
+            "max": 5.5
+        },
+        "permeability": {
+            "min": 0,
+            "max": 0.12580993042782807
+        },
+        "lambda": {
+            "min": 0.0343991413867645,
+            "max": 0.05220748945928988
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.1250979865559637,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 2.4912164708990425e-09,
+            "max": 1.7312709338006927e-07
+        }
+    },
+    "fixed_params": {
+        "home_size": 2.5,
+        "k_average_active": 15.403149800555456,
+        "k_average_confined": 3.5929376782427984,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 3
+}

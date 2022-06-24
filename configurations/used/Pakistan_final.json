@@ -1,0 +1,46 @@
+{
+    "country": "Pakistan",
+    "total_population": 220892340,
+    "max_days": 130,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 14.5,
+            "max": 20
+        },
+        "permeability": {
+            "min": 0.2331015345675948,
+            "max": 1
+        },
+        "lambda": {
+            "min": 0.025475094754214656,
+            "max": 0.039151533309390155
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.0625,
+            "max": 0.13075759177879231
+        },
+        "initial_i": {
+            "min": 3.6646690869014296e-09,
+            "max": 1.8866511589344206e-07
+        }
+    },
+    "fixed_params": {
+        "home_size": 6.8,
+        "k_average_active": 18.64967673222281,
+        "k_average_confined": 4.184054568745599,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 2
+}

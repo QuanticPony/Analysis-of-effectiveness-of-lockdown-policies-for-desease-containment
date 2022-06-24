@@ -1,0 +1,46 @@
+{
+    "country": "Morocco",
+    "total_population": 36910560,
+    "max_days": 90,
+    "simulation": {
+        "n_simulations": 1300000,
+        "n_executions": 1
+    },
+    "params": {
+        "offset": {
+            "min": 5.5,
+            "max": 10.5
+        },
+        "permeability": {
+            "min": 0,
+            "max": 0.11688807212619569
+        },
+        "lambda": {
+            "min": 0.037731722915031074,
+            "max": 0.06891737041399304
+        },
+        "IFR": {
+            "min": 0.007,
+            "max": 0.013
+        },
+        "what": {
+            "min": 0.12349206228029748,
+            "max": 0.16666666666666666
+        },
+        "initial_i": {
+            "min": 6.677352766289287e-10,
+            "max": 9.571004949349011e-08
+        }
+    },
+    "fixed_params": {
+        "home_size": 4.6,
+        "k_average_active": 14.301846738498533,
+        "k_average_confined": 3.718421159105148,
+        "mu": 0.23809523809523808,
+        "eta": 0.1923076923076923,
+        "what": 0.091
+    },
+    "first_day_deaths_list": "2020-01-22",
+    "min_days": 0,
+    "score": 2
+}

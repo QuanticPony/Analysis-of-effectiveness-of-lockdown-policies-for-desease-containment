@@ -9,4 +9,5 @@ generated_data/*
 *.real_data
 *.png
 *.dat
+*.pdf
 pruebas.py
