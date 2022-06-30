@@ -47,7 +47,7 @@ DEPARTAMENTO DE FÍSICA DE LA MATERIA CONDENSADA</h3>
 tenga en cuenta las políticas de restricción de movilidad, que permita emular las
 evoluciones de epidemias reales y que ofrezca información sobre la importancia de estas
 medidas. Mostraremos la relevancia de la determinación del número de reproducción
-básico $R_0$ al comienzo de epidemias para obtener información de la expansión de la
+básico al comienzo de epidemias para obtener información de la expansión de la
 enfermedad y lo evaluaremos en nuestro modelo. Simularemos epidemias para estudiar
 los efectos de implementaciones precoces/tardías de las restricciones y el efecto de la
 permeabilidad de estas medidas. Para crear el modelo epidemiológico aprovecharemos
