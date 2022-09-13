@@ -62,7 +62,7 @@ parámetro socio-económico que refleje la riqueza de la población de cada paí
 <br/><br/>
 
 # Memoria
-
+El archivo `memoria.pdf` o en el depósito de UNIZAR: 
 https://deposita.unizar.es/record/69350?ln=es
 
 <br/><br/>
