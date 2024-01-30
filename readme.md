@@ -67,6 +67,10 @@ https://deposita.unizar.es/record/69350?ln=es
 
 <br/><br/>
 
+# Core
+The core of this project was refined and moved into a Python module: `compartmental`. Check it out! 
+https://quanticpony.github.io/compartmental/examples/SIR/
+
 # Requisitos
 *   [numpy](https://numpy.org/)
 *   [cupy](https://cupy.dev/) así como una tarjeta gráfica compatible
